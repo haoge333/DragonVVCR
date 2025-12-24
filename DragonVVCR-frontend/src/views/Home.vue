@@ -90,7 +90,6 @@ import MyComplaints from '../components/MyComplaints.vue';
 import ComplaintStats from '../components/ComplaintStats.vue';
 import ComplaintSearch from '../components/ComplaintSearch.vue';
 import * as bootstrap from 'bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
 
 export default {
   name: 'Home',

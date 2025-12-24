@@ -1,9 +1,12 @@
 package com.dragonvvcr.controller;
 
+import com.dragonvvcr.dto.ComplaintCountDTO;
 import com.dragonvvcr.entity.Complaint;
 import com.dragonvvcr.entity.User;
 import com.dragonvvcr.service.ComplaintService;
 import com.dragonvvcr.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +18,8 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/complaints")
 public class ComplaintController {
+    
+    private static final Logger logger = LoggerFactory.getLogger(ComplaintController.class);
 
     @Autowired
     private ComplaintService complaintService;
@@ -34,13 +39,17 @@ public class ComplaintController {
 
     @PostMapping
     public ResponseEntity<Complaint> createComplaint(@RequestBody Complaint complaint) {
+        logger.info("创建吐槽请求: 目标玩家={}, 副本名称={}", complaint.getTargetPlayerId(), complaint.getDungeonName());
+        
         // 验证用户是否存在
         User user = userService.getUserById(complaint.getUser().getId());
         if (user == null) {
+            logger.warn("创建吐槽失败: 用户不存在, ID={}", complaint.getUser().getId());
             return ResponseEntity.badRequest().build();
         }
 
         Complaint createdComplaint = complaintService.createComplaint(complaint);
+        logger.info("吐槽创建成功: ID={}", createdComplaint.getId());
         return ResponseEntity.ok(createdComplaint);
     }
 
@@ -61,24 +70,29 @@ public class ComplaintController {
     public ResponseEntity<List<Complaint>> getComplaintsByUser(
             @PathVariable Long userId,
             @RequestHeader(value = "Authorization", required = false) String token) {
+        logger.info("获取用户吐槽列表: 用户ID={}", userId);
+        
         try {
             // 如果提供了token，验证它
             if (token != null && !token.isEmpty()) {
                 User user = userService.getUserByToken(token);
                 if (user == null) {
+                    logger.warn("获取用户吐槽列表失败: token无效");
                     return ResponseEntity.status(401).build();
                 }
             }
 
             // 验证用户是否存在
             if (userService.getUserById(userId) == null) {
+                logger.warn("获取用户吐槽列表失败: 用户不存在, ID={}", userId);
                 return ResponseEntity.badRequest().build();
             }
 
             List<Complaint> complaints = complaintService.getComplaintsByUserId(userId);
+            logger.info("成功获取用户吐槽列表: 用户ID={}, 吐槽数量={}", userId, complaints.size());
             return ResponseEntity.ok(complaints);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("获取用户吐槽列表异常: 用户ID={}, 错误: {}", userId, e.getMessage(), e);
             return ResponseEntity.badRequest().build();
         }
     }
@@ -96,14 +110,14 @@ public class ComplaintController {
     }
 
     @GetMapping("/stats/most-complained-players")
-    public ResponseEntity<List<Object[]>> getMostComplainedPlayers() {
-        List<Object[]> stats = complaintService.getMostComplainedPlayers();
+    public ResponseEntity<List<ComplaintCountDTO>> getMostComplainedPlayers() {
+        List<ComplaintCountDTO> stats = complaintService.getMostComplainedPlayers();
         return ResponseEntity.ok(stats);
     }
 
     @GetMapping("/stats/most-complained-dungeons")
-    public ResponseEntity<List<Object[]>> getMostComplainedDungeons() {
-        List<Object[]> stats = complaintService.getMostComplainedDungeons();
+    public ResponseEntity<List<ComplaintCountDTO>> getMostComplainedDungeons() {
+        List<ComplaintCountDTO> stats = complaintService.getMostComplainedDungeons();
         return ResponseEntity.ok(stats);
     }
 }

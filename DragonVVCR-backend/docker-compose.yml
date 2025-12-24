@@ -1,0 +1,36 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: dragonvvcr-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: dragonvvcr
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./src/main/resources/sql/mysql_init.sql:/docker-entrypoint-initdb.d/mysql_init.sql
+    command: --default-authentication-plugin=mysql_native_password
+    networks:
+      - dragonvvcr-network
+
+  redis:
+    image: redis:6.2.6
+    container_name: dragonvvcr-redis
+    restart: always
+    ports:
+      - "6379:6379"
+    command: redis-server --requirepass admin
+    volumes:
+      - redis_data:/data
+    networks:
+      - dragonvvcr-network
+
+volumes:
+  mysql_data:
+  redis_data:
+
+networks:
+  dragonvvcr-network:
+    driver: bridge

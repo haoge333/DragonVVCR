@@ -14,7 +14,7 @@
           </div>
           <div v-else>
             <div v-for="(player, index) in mostComplainedPlayers" :key="index" class="mb-2">
-              {{ index + 1 }}. {{ player[0] }} - {{ player[1] }} 次吐槽
+              {{ index + 1 }}. {{ player.name }} - {{ player.count }} 次吐槽
             </div>
           </div>
         </div>
@@ -34,7 +34,7 @@
           </div>
           <div v-else>
             <div v-for="(dungeon, index) in mostComplainedDungeons" :key="index" class="mb-2">
-              {{ index + 1 }}. {{ dungeon[0] }} - {{ dungeon[1] }} 次吐槽
+              {{ index + 1 }}. {{ dungeon.name }} - {{ dungeon.count }} 次吐槽
             </div>
           </div>
         </div>

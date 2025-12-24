@@ -1,40 +1,34 @@
 package com.dragonvvcr.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jakarta.persistence.*;
+import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Data
-@Entity
-@Table(name = "complaints")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@TableName("complaints")
 public class Complaint implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @TableField("user_id")
+    private Long userId;
+
+    // 保留user对象用于关联查询
+    @TableField(exist = false)
     private User user;
 
-    @Column(name = "target_player_id", nullable = false)
+    @TableField("target_player_id")
     private String targetPlayerId;
 
-    @Column(name = "dungeon_name", nullable = false)
+    @TableField("dungeon_name")
     private String dungeonName;
 
-    @Column(name = "description", columnDefinition = "TEXT")
+    @TableField("description")
     private String description;
 
-    @Column(name = "created_time")
+    @TableField(value = "created_time", fill = FieldFill.INSERT)
     private LocalDateTime createdTime;
-
-    @PrePersist
-    protected void onCreate() {
-        createdTime = LocalDateTime.now();
-    }
 }

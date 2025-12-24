@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // 创建axios实例
 const api = axios.create({
-  baseURL: 'http://localhost:8088/TestProject/api',
+  baseURL: 'http://localhost:8088/dnvvcr/api',
   timeout: 10000
 });
 

@@ -1,8 +1,11 @@
 package com.dragonvvcr.service;
 
+import com.dragonvvcr.dto.ComplaintCountDTO;
 import com.dragonvvcr.entity.Complaint;
-import com.dragonvvcr.repository.ComplaintRepository;
+import com.dragonvvcr.mapper.ComplaintMapper;
 import com.dragonvvcr.util.RedisUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,9 +14,11 @@ import java.util.concurrent.TimeUnit;
 
 @Service
 public class ComplaintService {
+    
+    private static final Logger logger = LoggerFactory.getLogger(ComplaintService.class);
 
     @Autowired
-    private ComplaintRepository complaintRepository;
+    private ComplaintMapper complaintMapper;
 
     @Autowired
     private RedisUtil redisUtil;
@@ -30,7 +35,7 @@ public class ComplaintService {
 
         if (complaint == null) {
             // 缓存中没有，从数据库获取
-            complaint = complaintRepository.findById(id).orElse(null);
+            complaint = complaintMapper.selectById(id);
             if (complaint != null) {
                 // 将数据存入缓存，设置过期时间为 1 小时
                 redisUtil.set(key, complaint, 1, TimeUnit.HOURS);
@@ -45,7 +50,7 @@ public class ComplaintService {
         List<Complaint> complaints = redisUtil.getList(key, Complaint.class);
 
         if (complaints == null) {
-            complaints = complaintRepository.findByUserId(userId);
+            complaints = complaintMapper.findByUserId(userId);
             redisUtil.set(key, complaints, 30, TimeUnit.MINUTES);
         }
 
@@ -57,7 +62,7 @@ public class ComplaintService {
         List<Complaint> complaints = redisUtil.getList(key, Complaint.class);
 
         if (complaints == null) {
-            complaints = complaintRepository.findByTargetPlayerId(targetPlayerId);
+            complaints = complaintMapper.findByTargetPlayerId(targetPlayerId);
             redisUtil.set(key, complaints, 30, TimeUnit.MINUTES);
         }
 
@@ -69,7 +74,7 @@ public class ComplaintService {
         List<Complaint> complaints = redisUtil.getList(key, Complaint.class);
 
         if (complaints == null) {
-            complaints = complaintRepository.findByDungeonName(dungeonName);
+            complaints = complaintMapper.findByDungeonName(dungeonName);
             redisUtil.set(key, complaints, 30, TimeUnit.MINUTES);
         }
 
@@ -77,49 +82,66 @@ public class ComplaintService {
     }
 
     public Complaint createComplaint(Complaint complaint) {
-        Complaint savedComplaint = complaintRepository.save(complaint);
+        logger.debug("创建吐槽: 目标玩家={}, 副本={}", complaint.getTargetPlayerId(), complaint.getDungeonName());
+        
+        // 确保设置userId字段
+        if (complaint.getUser() != null && complaint.getUser().getId() != null) {
+            complaint.setUserId(complaint.getUser().getId());
+        }
+
+        complaintMapper.insert(complaint);
+        Complaint savedComplaint = complaintMapper.selectById(complaint.getId());
 
         // 将新吐槽存入缓存
         String key = COMPLAINT_KEY_PREFIX + savedComplaint.getId();
         redisUtil.set(key, savedComplaint, 1, TimeUnit.HOURS);
+        logger.debug("新吐槽已存入缓存: ID={}", savedComplaint.getId());
 
         // 清除相关缓存
         clearRelatedCache(savedComplaint);
+        logger.info("吐槽创建成功: ID={}, 目标玩家={}, 副本={}", 
+            savedComplaint.getId(), savedComplaint.getTargetPlayerId(), savedComplaint.getDungeonName());
 
         return savedComplaint;
     }
 
     public void deleteComplaint(Long id) {
-        Complaint complaint = complaintRepository.findById(id).orElse(null);
+        logger.debug("删除吐槽: ID={}", id);
+        
+        Complaint complaint = complaintMapper.selectById(id);
         if (complaint != null) {
-            complaintRepository.deleteById(id);
+            complaintMapper.deleteById(id);
             // 删除缓存
             String key = COMPLAINT_KEY_PREFIX + id;
             redisUtil.delete(key);
+            logger.debug("吐槽缓存已删除: ID={}", id);
 
             // 清除相关缓存
             clearRelatedCache(complaint);
+            logger.info("吐槽删除成功: ID={}", id);
+        } else {
+            logger.warn("删除吐槽失败: 吐槽不存在, ID={}", id);
         }
     }
 
-    public List<Object[]> getMostComplainedPlayers() {
+    public List<ComplaintCountDTO> getMostComplainedPlayers() {
         String key = "stats:most_complained_players";
-        List<Object[]> result = redisUtil.getList(key, Object[].class);
+        List<ComplaintCountDTO> result = redisUtil.getList(key, ComplaintCountDTO.class);
 
         if (result == null) {
-            result = complaintRepository.findMostComplainedPlayers();
+            result = complaintMapper.findMostComplainedPlayers();
             redisUtil.set(key, result, 1, TimeUnit.HOURS);
         }
 
         return result;
     }
 
-    public List<Object[]> getMostComplainedDungeons() {
+    public List<ComplaintCountDTO> getMostComplainedDungeons() {
         String key = "stats:most_complained_dungeons";
-        List<Object[]> result = redisUtil.getList(key, Object[].class);
+        List<ComplaintCountDTO> result = redisUtil.getList(key, ComplaintCountDTO.class);
 
         if (result == null) {
-            result = complaintRepository.findMostComplainedDungeons();
+            result = complaintMapper.findMostComplainedDungeons();
             redisUtil.set(key, result, 1, TimeUnit.HOURS);
         }
 
@@ -127,20 +149,27 @@ public class ComplaintService {
     }
 
     private void clearRelatedCache(Complaint complaint) {
+        logger.debug("清除相关缓存: 用户ID={}, 玩家={}, 副本={}", 
+            complaint.getUserId(), complaint.getTargetPlayerId(), complaint.getDungeonName());
+            
         // 清除用户吐槽列表缓存
-        String userComplaintsKey = USER_COMPLAINTS_KEY_PREFIX + complaint.getUser().getId();
+        String userComplaintsKey = USER_COMPLAINTS_KEY_PREFIX + complaint.getUserId();
         redisUtil.delete(userComplaintsKey);
+        logger.debug("已清除用户吐槽列表缓存: {}", userComplaintsKey);
 
         // 清除被吐槽玩家吐槽列表缓存
         String playerComplaintsKey = PLAYER_COMPLAINTS_KEY_PREFIX + complaint.getTargetPlayerId();
         redisUtil.delete(playerComplaintsKey);
+        logger.debug("已清除玩家吐槽列表缓存: {}", playerComplaintsKey);
 
         // 清除副本吐槽列表缓存
         String dungeonComplaintsKey = DUNGEON_COMPLAINTS_KEY_PREFIX + complaint.getDungeonName();
         redisUtil.delete(dungeonComplaintsKey);
+        logger.debug("已清除副本吐槽列表缓存: {}", dungeonComplaintsKey);
 
         // 清除统计数据缓存
         redisUtil.delete("stats:most_complained_players");
         redisUtil.delete("stats:most_complained_dungeons");
+        logger.debug("已清除统计数据缓存");
     }
 }
