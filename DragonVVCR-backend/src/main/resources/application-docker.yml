@@ -1,5 +1,13 @@
 
 spring:
+  # Jackson配置，支持Java 8日期时间类型
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+    deserialization:
+      fail-on-unknown-properties: false
+    modules:
+      - com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
   # MySQL 数据源配置
   datasource:
     url: jdbc:mysql://mysql:3306/dragonvvcr?useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
@@ -15,7 +23,7 @@ spring:
   # Redis 配置
   data:
     redis:
-      host: localhost
+      host: redis  # 修改为Docker服务名
       port: 6379
       database: 0
       password: admin
@@ -26,3 +34,9 @@ spring:
           max-wait: -1
           max-idle: 8
           min-idle: 0
+
+# 服务器配置 - 确保与application.yml一致
+server:
+  port: 8088
+  servlet:
+    context-path: /dnvvcr

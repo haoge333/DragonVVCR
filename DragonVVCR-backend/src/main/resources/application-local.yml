@@ -1,4 +1,12 @@
 spring:
+  # Jackson配置，支持Java 8日期时间类型
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+    deserialization:
+      fail-on-unknown-properties: false
+    modules:
+      - com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
   # MySQL 数据库配置
   datasource:
     url: jdbc:mysql://localhost:3306/dragonvvcr?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true

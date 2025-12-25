@@ -1,5 +1,11 @@
 -- 创建数据库
 CREATE DATABASE IF NOT EXISTS dragonvvcr DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- 创建应用用户并授权
+CREATE USER IF NOT EXISTS 'root'@'%' IDENTIFIED BY 'root';
+GRANT ALL PRIVILEGES ON dragonvvcr.* TO 'root'@'%';
+FLUSH PRIVILEGES;
+
 USE dragonvvcr;
 
 -- 创建用户表

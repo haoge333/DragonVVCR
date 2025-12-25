@@ -1,13 +1,22 @@
 spring:
   application:
     name: dnvvcr
+  # Jackson配置，支持Java 8日期时间类型
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+    deserialization:
+      fail-on-unknown-properties: false
+    modules:
+      - com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
   # 日志配置
   output:
     ansi:
       enabled: always
   # 环境配置
   profiles:
-    active: local
+    # 默认使用本地配置，在Docker环境中通过环境变量SPRING_PROFILES_ACTIVE=docker覆盖
+    active: ${SPRING_PROFILES_ACTIVE:local}
 
 # MyBatis Plus 配置
 mybatis-plus:

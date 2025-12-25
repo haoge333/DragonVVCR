@@ -1,4 +1,5 @@
 services:
+  # MySQL 数据库
   mysql:
     image: mysql:8.0
     container_name: dragonvvcr-mysql
@@ -10,7 +11,7 @@ services:
       - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
-      - ./src/main/resources/sql/mysql_init.sql:/docker-entrypoint-initdb.d/mysql_init.sql
+      - ./DragonVVCR-backend/src/main/resources/sql/mysql_init.sql:/docker-entrypoint-initdb.d/mysql_init.sql
     command: --default-authentication-plugin=mysql_native_password
     networks:
       - dragonvvcr-network
@@ -20,6 +21,7 @@ services:
       timeout: 5s
       retries: 5
 
+  # Redis 缓存
   redis:
     image: redis:6.2.6
     container_name: dragonvvcr-redis
@@ -37,14 +39,14 @@ services:
       timeout: 3s
       retries: 3
 
-  app:
+  # 后端应用
+  backend:
     build:
-      context: .
+      context: ./DragonVVCR-backend
       dockerfile: Dockerfile
-    container_name: dragonvvcr-app
+    container_name: dragonvvcr-backend
     restart: always
     ports:
-      - "80:80"
       - "8088:8088"
     depends_on:
       mysql:
@@ -53,8 +55,6 @@ services:
         condition: service_healthy
     networks:
       - dragonvvcr-network
-    volumes:
-      - ../DragonVVCR-frontend:/frontend
     environment:
       - SPRING_PROFILES_ACTIVE=docker
       - SERVER_SERVLET_CONTEXT_PATH=/dnvvcr
@@ -68,6 +68,20 @@ services:
       - SPRING_REDIS_PORT=6379
       - SPRING_REDIS_PASSWORD=admin
       - SPRING_REDIS_DATABASE=0
+
+  # 前端应用
+  frontend:
+    build:
+      context: ./DragonVVCR-frontend
+      dockerfile: Dockerfile
+    container_name: dragonvvcr-frontend
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - dragonvvcr-network
 
 volumes:
   mysql_data:
