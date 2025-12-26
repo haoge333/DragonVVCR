@@ -22,7 +22,7 @@
     </div>
     <div class="col-md-6">
       <div class="stats-card">
-        <h5>副本菜鸡数量排行榜</h5>
+        <h5>菜鸡数量排行榜</h5>
         <div v-if="dungeonsLoading" class="text-center">
           <div class="spinner-border spinner-border-sm" role="status">
             <span class="visually-hidden">加载中...</span>

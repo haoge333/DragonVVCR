@@ -3,7 +3,7 @@ version: '3.8'
 services:
   # 代码更新和构建服务
   builder:
-    image: maven:3.8.6-openjdk-17-slim
+    image: registry.cn-hangzhou.aliyuncs.com/library/maven:3.8.6-openjdk-17-slim
     container_name: dragonvvcr-builder
     volumes:
       - /opt/projects/DragonVVCR:/workspace
@@ -62,7 +62,7 @@ services:
 
   # 前端服务 (Nginx)
   frontend:
-    image: nginx:alpine
+    image: registry.cn-hangzhou.aliyuncs.com/library/nginx:alpine
     container_name: dragonvvcr-frontend
     restart: always
     ports:

@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <h1 class="text-center mb-4">龙之谷菜鸡排行榜</h1>
+    <h1 class="text-center mb-4">龙之谷谁是菜鸡排行榜</h1>
 
     <!-- 登录/注册表单 -->
     <div v-if="!isLoggedIn" class="auth-section">
@@ -40,7 +40,7 @@
           <button class="nav-link" id="stats-tab" data-bs-toggle="tab" data-bs-target="#stats" type="button" role="tab" aria-controls="stats" aria-selected="false">吐槽统计</button>
         </li>
         <li class="nav-item" role="presentation">
-          <button class="nav-link" id="search-tab" data-bs-toggle="tab" data-bs-target="#search" type="button" role="tab" aria-controls="search" aria-selected="false">搜索吐槽</button>
+          <button class="nav-link" id="search-tab" data-bs-toggle="tab" data-bs-target="#search" type="button" role="tab" aria-controls="search" aria-selected="false">谁是菜鸡</button>
         </li>
       </ul>
 
