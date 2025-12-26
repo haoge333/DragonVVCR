@@ -34,7 +34,7 @@
           <button class="nav-link active" id="complain-tab" data-bs-toggle="tab" data-bs-target="#complain" type="button" role="tab" aria-controls="complain" aria-selected="true">我要吐槽</button>
         </li>
         <li class="nav-item" role="presentation">
-          <button class="nav-link" id="myComplaints-tab" data-bs-toggle="tab" data-bs-target="#myComplaints" type="button" role="tab" aria-controls="myComplaints" aria-selected="false">我的吐槽</button>
+          <button class="nav-link" id="myComplaints-tab" data-bs-toggle="tab" data-bs-target="#myComplaints" type="button" role="tab" aria-controls="myComplaints" aria-selected="false">吐槽列表</button>
         </li>
         <li class="nav-item" role="presentation">
           <button class="nav-link" id="stats-tab" data-bs-toggle="tab" data-bs-target="#stats" type="button" role="tab" aria-controls="stats" aria-selected="false">吐槽统计</button>
