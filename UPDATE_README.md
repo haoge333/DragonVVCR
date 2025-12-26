@@ -14,7 +14,6 @@
 
 确保服务器上已安装以下软件：
 - Docker
-- Docker Compose
 - Git
 
 确保项目目录结构为：
@@ -78,19 +77,19 @@ docker stop dragonvvcr-backend dragonvvcr-frontend || true
 docker rm dragonvvcr-backend dragonvvcr-frontend || true
 
 # 启动新的前后端服务
-docker-compose -f docker-compose-update.yml --profile update up -d
+docker compose -f docker-compose-update.yml --profile update up -d
 ```
 
 ### 3. 查看服务状态
 
 ```bash
-docker-compose -f docker-compose-update.yml --profile update ps
+docker compose -f docker-compose-update.yml --profile update ps
 ```
 
 ## 与完整部署的区别
 
 - **完整部署** (docker-compose.yml): 构建并启动所有服务，包括MySQL、Redis、前端和后端
-- **更新部署** (docker-compose-update.yml): 只更新前后端代码和容器，不重建MySQL和Redis容器
+- **更新部署** (docker compose update): 只更新前后端代码和容器，不重建MySQL和Redis容器
 
 ## 常见问题
 

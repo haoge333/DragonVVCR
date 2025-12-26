@@ -45,7 +45,7 @@ your-project/
 - Axios
 
 ### 部署
-- Docker Compose
+- Docker
 
 ## 快速开始
 
@@ -53,7 +53,7 @@ your-project/
 
 ```bash
 cd docker
-docker-compose up -d
+docker compose up -d
 ```
 
 2. 启动后端服务：

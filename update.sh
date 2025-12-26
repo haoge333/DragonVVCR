@@ -22,7 +22,7 @@ fi
 
 echo "===== 2. 拉取最新代码并构建项目 ====="
 # 使用Docker Compose的build profile执行构建
-docker-compose -f docker-compose-update.yml --profile build up --build builder
+docker compose -f docker-compose-update.yml --profile build up --build builder
 
 echo "===== 3. 停止现有的前后端服务 ====="
 # 停止并删除现有前后端容器
@@ -31,7 +31,7 @@ docker rm dragonvvcr-backend dragonvvcr-frontend || true
 
 echo "===== 4. 启动新的前后端服务 ====="
 # 启动更新后的前后端服务
-docker-compose -f docker-compose-update.yml --profile update up -d
+docker compose -f docker-compose-update.yml --profile update up -d
 
 echo "===== 5. 等待服务启动 ====="
 # 等待服务启动
@@ -39,7 +39,7 @@ sleep 30
 
 echo "===== 6. 检查服务状态 ====="
 # 检查服务状态
-docker-compose -f docker-compose-update.yml --profile update ps
+docker compose -f docker-compose-update.yml --profile update ps
 
 echo "===== 更新完成 ====="
 echo "后端API访问地址: http://localhost:8088/dnvvcr"
