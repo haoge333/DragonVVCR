@@ -40,9 +40,6 @@ services:
     restart: always
     ports:
       - "8088:8088"
-    depends_on:
-      - mysql
-      - redis
     networks:
       - dragonvvcr-network
     volumes:
@@ -51,12 +48,12 @@ services:
       - SPRING_PROFILES_ACTIVE=docker
       - SERVER_SERVLET_CONTEXT_PATH=/dnvvcr
       # 数据库连接配置
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/dragonvvcr?useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+      - SPRING_DATASOURCE_URL=jdbc:mysql://dragonvvcr-mysql:3306/dragonvvcr?useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=${MYSQL_ROOT_PASSWORD:-root}
       - SPRING_DATASOURCE_DRIVER_CLASS_NAME=com.mysql.cj.jdbc.Driver
       # Redis连接配置
-      - SPRING_REDIS_HOST=redis
+      - SPRING_REDIS_HOST=dragonvvcr-redis
       - SPRING_REDIS_PORT=6379
       - SPRING_REDIS_PASSWORD=${REDIS_PASSWORD:-admin}
       - SPRING_REDIS_DATABASE=0
@@ -80,18 +77,8 @@ services:
     profiles:
       - update
 
-  # 外部服务引用
-  mysql:
-    external_links:
-      - dragonvvcr-mysql:mysql
-    networks:
-      - dragonvvcr-network
-
-  redis:
-    external_links:
-      - dragonvvcr-redis:redis
-    networks:
-      - dragonvvcr-network
+  # 使用外部链接连接到已运行的 MySQL 和 Redis 容器
+  # 注意：确保名为 dragonvvcr-mysql 和 dragonvvcr-redis 的容器已存在并正在运行
 
 volumes:
   maven_cache:
