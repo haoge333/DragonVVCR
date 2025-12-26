@@ -60,10 +60,10 @@ docker info | grep -A 10 "Registry Mirrors"
 cd /opt/projects/DragonVVCR
 
 # 确保脚本有执行权限
-chmod +x initial-deploy.sh
+chmod +x server-initial-deploy.sh
 
 # 执行初次部署脚本
-./initial-deploy.sh
+./server-initial-deploy.sh
 ```
 
 ## 更新部署
@@ -73,10 +73,10 @@ chmod +x initial-deploy.sh
 cd /opt/projects/DragonVVCR
 
 # 确保脚本有执行权限
-chmod +x update-deploy.sh
+chmod +x server-update-deploy.sh
 
 # 执行更新部署脚本
-./update-deploy.sh
+./server-update-deploy.sh
 ```
 
 ## 脚本说明
@@ -107,7 +107,7 @@ chmod +x update-deploy.sh
 ```bash
 export MYSQL_ROOT_PASSWORD=your_password
 export REDIS_PASSWORD=your_redis_password
-./initial-deploy.sh  # 或 ./update-deploy.sh
+./server-initial-deploy.sh  # 或 ./server-update-deploy.sh
 ```
 
 ## 访问应用
@@ -124,5 +124,5 @@ export REDIS_PASSWORD=your_redis_password
 4. 如果数据库初始化失败，可能需要手动删除数据卷并重新初始化：
    ```bash
    docker compose down -v
-   ./initial-deploy.sh
+   ./server-initial-deploy.sh
    ```
