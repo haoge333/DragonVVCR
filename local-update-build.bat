@@ -45,10 +45,7 @@ if %DOCKER_UP_EXIT_CODE% neq 0 (
     exit /b 1
 )
 
-echo 5. 等待服务启动...
-timeout /t 30 /nobreak
-
-echo 6. 检查服务状态...
+echo 5. 检查服务状态...
 docker-compose ps
 
 echo ===== 更新部署完成 =====

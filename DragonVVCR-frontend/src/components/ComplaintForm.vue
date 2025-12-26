@@ -22,19 +22,85 @@
 .complaint-form {
   max-width: 600px;
   margin: 0 auto;
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
 
-@media (max-width: 768px) {
+.form-label {
+  font-weight: 600;
+  color: #495057;
+  margin-bottom: 0.5rem;
+}
+
+.form-control {
+  border-radius: 6px;
+  border: 1px solid #ced4da;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.form-control:focus {
+  border-color: #80bdff;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.btn-primary {
+  background-color: #007bff;
+  border-color: #007bff;
+  padding: 0.5rem 1rem;
+  font-weight: 500;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+.btn-primary:hover {
+  background-color: #0069d9;
+  border-color: #0062cc;
+}
+
+/* 移动设备优化 */
+@media (max-width: 576px) {
   .complaint-form {
     max-width: 100%;
+    padding: 15px;
+    border-radius: 8px;
   }
 
   .form-control {
     font-size: 16px; /* 防止iOS缩放 */
+    padding: 0.6rem 0.75rem;
   }
 
   textarea {
     min-height: 120px;
+  }
+
+  .btn {
+    padding: 0.6rem 1rem;
+    font-size: 1rem;
+  }
+}
+
+/* 平板设备优化 */
+@media (min-width: 577px) and (max-width: 991px) {
+  .complaint-form {
+    max-width: 90%;
+    padding: 18px;
+  }
+}
+
+/* 桌面设备优化 */
+@media (min-width: 992px) {
+  .complaint-form {
+    padding: 25px;
+  }
+
+  .form-control {
+    padding: 0.75rem 1rem;
+  }
+
+  textarea {
+    min-height: 150px;
   }
 }
 </style>

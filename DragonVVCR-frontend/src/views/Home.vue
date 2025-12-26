@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="header-section">
-      <h1 class="text-center mb-4">龙之谷谁是菜鸡排行榜</h1>
+      <h1 class="text-center mb-4">龙之谷怀旧服菜鸡排行榜</h1>
     </div>
 
     <!-- 登录/注册表单 -->
@@ -84,14 +84,45 @@
 
 <style scoped>
 .header-section {
-  padding: 10px 0;
+  padding: 0 15px;
+  margin-bottom: 20px;
+}
+
+.header-section h1 {
+  font-weight: 700;
+  color: #2c3e50;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+}
+
+.user-header {
+  background-color: #f8f9fa;
+  padding: 15px;
+  border-radius: 8px;
+  border-left: 4px solid #007bff;
 }
 
 .user-header h2 {
   font-size: 1.5rem;
+  font-weight: 600;
+  color: #2c3e50;
 }
 
-@media (max-width: 768px) {
+.auth-section, .complaint-section {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* 移动设备优化 */
+@media (max-width: 576px) {
+  .header-section {
+    padding: 0 10px;
+    margin-bottom: 15px;
+  }
+
   .header-section h1 {
     font-size: 1.5rem;
     margin-bottom: 1rem;
@@ -101,6 +132,7 @@
     flex-direction: column;
     align-items: flex-start !important;
     gap: 10px;
+    padding: 12px;
   }
 
   .user-header h2 {
@@ -110,6 +142,45 @@
   .btn-sm {
     font-size: 0.8rem;
     padding: 0.25rem 0.5rem;
+  }
+
+  .nav-tabs {
+    margin-bottom: 15px;
+  }
+}
+
+/* 平板设备优化 */
+@media (min-width: 577px) and (max-width: 991px) {
+  .header-section h1 {
+    font-size: 1.8rem;
+  }
+
+  .user-header {
+    padding: 18px;
+  }
+
+  .user-header h2 {
+    font-size: 1.4rem;
+  }
+}
+
+/* 桌面设备优化 */
+@media (min-width: 992px) {
+  .header-section {
+    padding: 0 20px;
+    margin-bottom: 25px;
+  }
+
+  .header-section h1 {
+    font-size: 2.2rem;
+  }
+
+  .user-header {
+    padding: 20px;
+  }
+
+  .user-header h2 {
+    font-size: 1.6rem;
   }
 }
 </style>

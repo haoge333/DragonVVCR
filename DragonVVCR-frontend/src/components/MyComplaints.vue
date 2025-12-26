@@ -37,44 +37,98 @@
 }
 
 .complaints-list {
-  margin-top: 15px;
+  margin-top: 20px;
 }
 
 .complaint-card {
   border: 1px solid #e9ecef;
-  border-radius: 8px;
+  border-radius: 10px;
   margin-bottom: 20px;
   background-color: white;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s, box-shadow 0.2s;
+  overflow: hidden;
+}
+
+.complaint-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
 .card-header {
-  padding: 15px;
+  padding: 18px 20px;
   border-bottom: 1px solid #e9ecef;
   background-color: #f8f9fa;
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card-header h5 {
+  font-weight: 600;
+  color: #2c3e50;
+  margin: 0;
 }
 
 .card-body {
-  padding: 15px;
+  padding: 20px;
+}
+
+.card-body p {
+  margin-bottom: 12px;
+  line-height: 1.6;
+}
+
+.card-body strong {
+  color: #495057;
+  font-weight: 600;
 }
 
 .empty-message {
   color: #6c757d;
   font-size: 1.1rem;
-  padding: 20px 0;
+  padding: 30px 0;
+  text-align: center;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  margin-top: 20px;
 }
 
-@media (max-width: 768px) {
+.btn-outline-danger {
+  border-color: #dc3545;
+  color: #dc3545;
+  transition: all 0.2s;
+}
+
+.btn-outline-danger:hover {
+  background-color: #dc3545;
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(220, 53, 69, 0.3);
+}
+
+.spinner-border {
+  width: 2rem;
+  height: 2rem;
+}
+
+/* 移动设备优化 */
+@media (max-width: 576px) {
   .my-complaints {
     max-width: 100%;
+  }
+
+  .complaints-list {
+    margin-top: 15px;
   }
 
   .card-header {
     flex-direction: column;
     align-items: flex-start !important;
-    gap: 8px;
+    gap: 10px;
+    padding: 15px;
   }
 
   .card-header h5 {
@@ -82,12 +136,48 @@
   }
 
   .card-body {
-    padding: 12px;
+    padding: 15px;
   }
 
   .card-body p {
     font-size: 0.9rem;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.8rem;
+  }
+
+  .empty-message {
+    padding: 20px 15px;
+    font-size: 1rem;
+  }
+
+  .btn-sm {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
+  }
+}
+
+/* 平板设备优化 */
+@media (min-width: 577px) and (max-width: 991px) {
+  .my-complaints {
+    max-width: 90%;
+  }
+
+  .card-header {
+    padding: 16px 18px;
+  }
+
+  .card-body {
+    padding: 18px;
+  }
+}
+
+/* 桌面设备优化 */
+@media (min-width: 992px) {
+  .card-header {
+    padding: 20px 25px;
+  }
+
+  .card-body {
+    padding: 25px;
   }
 }
 </style>
