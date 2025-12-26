@@ -2,7 +2,7 @@
   <div class="row">
     <div class="col-md-6">
       <div class="stats-card">
-        <h5>最常被吐槽的玩家</h5>
+        <h5>菜鸡排行榜</h5>
         <div v-if="playersLoading" class="text-center">
           <div class="spinner-border spinner-border-sm" role="status">
             <span class="visually-hidden">加载中...</span>
@@ -22,7 +22,7 @@
     </div>
     <div class="col-md-6">
       <div class="stats-card">
-        <h5>最常被吐槽的副本</h5>
+        <h5>副本菜鸡数量排行榜</h5>
         <div v-if="dungeonsLoading" class="text-center">
           <div class="spinner-border spinner-border-sm" role="status">
             <span class="visually-hidden">加载中...</span>
