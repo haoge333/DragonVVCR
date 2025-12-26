@@ -14,7 +14,7 @@ export REDIS_PASSWORD=${REDIS_PASSWORD:-admin}
 cd /opt/projects/DragonVVCR
 
 echo "===== 1. 拉取最新代码 ====="
-git pull origin main
+git pull origin master
 
 echo "===== 2. 检查网络是否存在 ====="
 # 检查网络是否存在，不存在则创建

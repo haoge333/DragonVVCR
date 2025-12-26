@@ -1,6 +1,8 @@
 <template>
   <div class="container">
-    <h1 class="text-center mb-4">龙之谷谁是菜鸡排行榜</h1>
+    <div class="header-section">
+      <h1 class="text-center mb-4">龙之谷谁是菜鸡排行榜</h1>
+    </div>
 
     <!-- 登录/注册表单 -->
     <div v-if="!isLoggedIn" class="auth-section">
@@ -24,9 +26,9 @@
 
     <!-- 吐槽系统主界面 -->
     <div v-else class="complaint-section">
-      <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2>欢迎, {{ currentUser.username }}</h2>
-        <button @click="handleLogout" class="btn btn-outline-secondary">退出登录</button>
+      <div class="user-header d-flex justify-content-between align-items-center mb-4">
+        <h2 class="mb-0">欢迎, {{ currentUser.username }}</h2>
+        <button @click="handleLogout" class="btn btn-outline-secondary btn-sm">退出登录</button>
       </div>
 
       <ul class="nav nav-tabs" id="mainTab" role="tablist">
@@ -79,6 +81,38 @@
     </div>
   </div>
 </template>
+
+<style scoped>
+.header-section {
+  padding: 10px 0;
+}
+
+.user-header h2 {
+  font-size: 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .header-section h1 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .user-header {
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: 10px;
+  }
+
+  .user-header h2 {
+    font-size: 1.2rem;
+  }
+
+  .btn-sm {
+    font-size: 0.8rem;
+    padding: 0.25rem 0.5rem;
+  }
+}
+</style>
 
 <script>
 import { ref, onMounted } from 'vue';

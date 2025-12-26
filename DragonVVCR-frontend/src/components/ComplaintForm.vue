@@ -1,5 +1,5 @@
 <template>
-  <form @submit.prevent="handleSubmit">
+  <form @submit.prevent="handleSubmit" class="complaint-form">
     <div class="mb-3">
       <label for="targetPlayerId" class="form-label">菜鸡ID</label>
       <input type="text" class="form-control" id="targetPlayerId" v-model="targetPlayerId" required>
@@ -12,9 +12,32 @@
       <label for="description" class="form-label">菜鸡行为</label>
       <textarea class="form-control" id="description" rows="5" v-model="description" required></textarea>
     </div>
-    <button type="submit" class="btn btn-primary w-100">提交吐槽</button>
+    <div class="d-grid gap-2">
+      <button type="submit" class="btn btn-primary">提交吐槽</button>
+    </div>
   </form>
 </template>
+
+<style scoped>
+.complaint-form {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+  .complaint-form {
+    max-width: 100%;
+  }
+
+  .form-control {
+    font-size: 16px; /* 防止iOS缩放 */
+  }
+
+  textarea {
+    min-height: 120px;
+  }
+}
+</style>
 
 <script>
 import { ref } from 'vue';
