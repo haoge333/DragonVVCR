@@ -81,15 +81,27 @@ body {
   font-size: 0.9rem;
   border-bottom: 2px solid transparent;
   transition: all 0.2s;
+  margin-right: 5px;
+  border-radius: 5px 5px 0 0;
+  background-color: rgba(255, 255, 255, 0.7);
+  border: 1px solid #dee2e6;
+  border-bottom: none;
 }
 
 .nav-tabs .nav-link:hover {
   border-bottom-color: rgba(0, 123, 255, 0.25);
+  background-color: rgba(255, 255, 255, 0.85);
+  border-color: #b8daff;
+  border-bottom: none;
 }
 
 .nav-tabs .nav-link.active {
   border-bottom-color: #007bff;
   font-weight: 500;
+  background-color: #e7f3ff;
+  border-color: #007bff;
+  border-bottom: none;
+  color: #0056b3;
 }
 
 .toast-container {
