@@ -15,22 +15,32 @@ body {
   background-color: #f8f9fa;
   padding: 0;
   margin: 0;
+  background-image: url('/assets/images/main-background-image.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  opacity: 0.8;
 }
 
 .app-container {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  position: relative;
+  z-index: 1;
 }
 
 .container {
   max-width: 1200px;
   margin: 20px auto;
-  background-color: white;
+  background-color: rgba(255, 255, 255, 0.85);
   padding: 20px;
   border-radius: 10px;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
   width: 100%;
+  backdrop-filter: blur(3px);
+  transition: all 0.3s ease;
 }
 
 .complaint-card {
