@@ -35,7 +35,7 @@ services:
   backend:
     build:
       context: /opt/projects/DragonVVCR/DragonVVCR-backend
-      dockerfile: Dockerfile.prod
+      dockerfile: Dockerfile
     container_name: dragonvvcr-backend
     restart: always
     ports:

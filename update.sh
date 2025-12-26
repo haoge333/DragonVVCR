@@ -11,7 +11,7 @@ export MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD:-root}
 export REDIS_PASSWORD=${REDIS_PASSWORD:-admin}
 
 # 进入项目目录
-cd /opt/projects/DragonVVCR/DragonVVCR-backend
+cd /opt/projects/DragonVVCR
 
 echo "===== 1. 检查网络是否存在 ====="
 # 检查网络是否存在，不存在则创建
