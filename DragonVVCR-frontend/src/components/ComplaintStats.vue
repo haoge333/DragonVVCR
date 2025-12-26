@@ -120,18 +120,32 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
-.rank:first-child {
-  background-color: #ffc107;
+/* 第一名 - 金色 */
+.stats-item:nth-child(1) .rank {
+  background: linear-gradient(135deg, #FFD700, #FFC107);
   color: #212529;
+  box-shadow: 0 2px 6px rgba(255, 215, 0, 0.4);
 }
 
+/* 第二名 - 银色 */
 .stats-item:nth-child(2) .rank {
-  background-color: #dee2e6;
+  background: linear-gradient(135deg, #E5E5E5, #C0C0C0);
+  color: #212529;
+  box-shadow: 0 2px 6px rgba(192, 192, 192, 0.4);
 }
 
+/* 第三名 - 铜色 */
 .stats-item:nth-child(3) .rank {
-  background-color: #fd7e14;
+  background: linear-gradient(135deg, #CD7F32, #B87333);
   color: white;
+  box-shadow: 0 2px 6px rgba(184, 115, 51, 0.4);
+}
+
+/* 其他排名 - 统一颜色 */
+.stats-item:nth-child(n+4) .rank {
+  background-color: #e7f3ff;
+  color: #495057;
+  border: 1px solid #b8daff;
 }
 
 .name {
