@@ -3,8 +3,8 @@
     <div class="mb-3">
       <label for="searchType" class="form-label">搜索类型</label>
       <select class="form-select" id="searchType" v-model="searchType">
-        <option value="player">玩家</option>
-        <option value="dungeon">副本</option>
+        <option value="player">菜鸡ID</option>
+        <option value="dungeon">副本名称</option>
       </select>
     </div>
     <div class="mb-3">

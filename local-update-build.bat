@@ -1,6 +1,6 @@
 @echo off
 chcp 65001 > nul
-echo 开始构建项目...
+echo ===== 开始更新 DragonVVCR 项目 =====
 echo 当前目录: %cd%
 
 echo 1. 进入后端项目执行mvn clean package命令...
@@ -27,19 +27,16 @@ if %NPM_EXIT_CODE% neq 0 (
 )
 echo 前端项目构建完成!
 
-echo 3. 停止并删除现有容器，然后重新构建并启动...
+echo 3. 仅更新前后端服务，保留数据库和缓存...
 cd ..
 echo 根目录: %cd%
-docker-compose down
-set DOCKER_DOWN_EXIT_CODE=%errorlevel%
-echo Docker Down命令退出码: %DOCKER_DOWN_EXIT_CODE%
-if %DOCKER_DOWN_EXIT_CODE% neq 0 (
-    echo Docker容器停止失败!
-    pause
-    exit /b 1
-)
+echo 停止前后端容器...
+docker stop dragonvvcr-backend dragonvvcr-frontend 2>nul
+echo 删除前后端容器...
+docker rm dragonvvcr-backend dragonvvcr-frontend 2>nul
 
-docker-compose up --build -d
+echo 4. 构建并启动更新的前后端服务...
+docker-compose up --build -d backend frontend
 set DOCKER_UP_EXIT_CODE=%errorlevel%
 echo Docker Up命令退出码: %DOCKER_UP_EXIT_CODE%
 if %DOCKER_UP_EXIT_CODE% neq 0 (
@@ -48,4 +45,13 @@ if %DOCKER_UP_EXIT_CODE% neq 0 (
     exit /b 1
 )
 
-echo 所有任务完成!
+echo 5. 等待服务启动...
+timeout /t 30 /nobreak
+
+echo 6. 检查服务状态...
+docker-compose ps
+
+echo ===== 更新部署完成 =====
+echo 后端API访问地址: http://localhost:8088/dnvvcr
+echo 前端页面访问地址: http://localhost
+pause
