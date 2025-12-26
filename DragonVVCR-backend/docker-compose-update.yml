@@ -1,0 +1,102 @@
+version: '3.8'
+
+services:
+  # 代码更新和构建服务
+  builder:
+    image: maven:3.8.6-openjdk-17-slim
+    container_name: dragonvvcr-builder
+    volumes:
+      - /opt/projects/DragonVVCR:/workspace
+      - maven_cache:/root/.m2
+    working_dir: /workspace
+    command: >
+      bash -c "
+      echo '===== 拉取最新代码 =====' &&
+      cd /workspace &&
+      git pull origin main &&
+
+      echo '===== 构建后端项目 =====' &&
+      cd /workspace/DragonVVCR-backend &&
+      mvn clean package -DskipTests &&
+
+      echo '===== 构建前端项目 =====' &&
+      cd /workspace/DragonVVCR-frontend &&
+      npm install &&
+      npm run build &&
+
+      echo '===== 构建完成 ====='
+      "
+    networks:
+      - dragonvvcr-network
+    profiles:
+      - build
+
+  # 后端服务
+  backend:
+    build:
+      context: /opt/projects/DragonVVCR/DragonVVCR-backend
+      dockerfile: Dockerfile.prod
+    container_name: dragonvvcr-backend
+    restart: always
+    ports:
+      - "8088:8088"
+    depends_on:
+      - mysql
+      - redis
+    networks:
+      - dragonvvcr-network
+    volumes:
+      - /opt/projects/DragonVVCR/DragonVVCR-frontend/dist:/frontend/dist
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SERVER_SERVLET_CONTEXT_PATH=/dnvvcr
+      # 数据库连接配置
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/dragonvvcr?useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=${MYSQL_ROOT_PASSWORD:-root}
+      - SPRING_DATASOURCE_DRIVER_CLASS_NAME=com.mysql.cj.jdbc.Driver
+      # Redis连接配置
+      - SPRING_REDIS_HOST=redis
+      - SPRING_REDIS_PORT=6379
+      - SPRING_REDIS_PASSWORD=${REDIS_PASSWORD:-admin}
+      - SPRING_REDIS_DATABASE=0
+    profiles:
+      - update
+
+  # 前端服务 (Nginx)
+  frontend:
+    image: nginx:alpine
+    container_name: dragonvvcr-frontend
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - /opt/projects/DragonVVCR/DragonVVCR-frontend/dist:/usr/share/nginx/html
+      - /opt/projects/DragonVVCR/DragonVVCR-frontend/nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - backend
+    networks:
+      - dragonvvcr-network
+    profiles:
+      - update
+
+  # 外部服务引用
+  mysql:
+    external_links:
+      - dragonvvcr-mysql:mysql
+    networks:
+      - dragonvvcr-network
+
+  redis:
+    external_links:
+      - dragonvvcr-redis:redis
+    networks:
+      - dragonvvcr-network
+
+volumes:
+  maven_cache:
+    driver: local
+
+networks:
+  dragonvvcr-network:
+    external: true
