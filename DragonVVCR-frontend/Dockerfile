@@ -20,6 +20,13 @@ RUN npm run build
 # 第二阶段：使用 Nginx 提供静态文件服务
 FROM nginx:stable-alpine
 
+# 安装时区数据
+RUN apk add --no-cache tzdata
+
+# 设置时区为中国时区
+ENV TZ=Asia/Shanghai
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
 # 从构建阶段复制构建产物到 nginx 的默认目录
 COPY --from=builder /app/dist /usr/share/nginx/html
 
