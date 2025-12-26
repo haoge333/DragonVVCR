@@ -3,8 +3,8 @@
     <div class="mb-3">
       <label for="searchType" class="form-label">搜索类型</label>
       <select class="form-select" id="searchType" v-model="searchType">
-        <option value="player">被吐槽玩家</option>
-        <option value="dungeon">副本名称</option>
+        <option value="player">玩家</option>
+        <option value="dungeon">副本</option>
       </select>
     </div>
     <div class="mb-3">
@@ -27,11 +27,11 @@
       <div v-else-if="searchResults.length > 0">
         <div v-for="complaint in searchResults" :key="complaint.id" class="complaint-card">
           <div class="d-flex justify-content-between">
-            <h5>被吐槽玩家: {{ complaint.targetPlayerId }}</h5>
+            <h5>菜鸡ID: {{ complaint.targetPlayerId }}</h5>
             <small>{{ formatDate(complaint.createdTime) }}</small>
           </div>
           <p class="mt-2"><strong>副本:</strong> {{ complaint.dungeonName }}</p>
-          <p><strong>描述:</strong> {{ complaint.description }}</p>
+          <p><strong>菜鸡行为:</strong> {{ complaint.description }}</p>
         </div>
       </div>
     </div>

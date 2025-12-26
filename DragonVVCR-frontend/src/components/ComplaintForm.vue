@@ -1,7 +1,7 @@
 <template>
   <form @submit.prevent="handleSubmit">
     <div class="mb-3">
-      <label for="targetPlayerId" class="form-label">被吐槽玩家游戏ID</label>
+      <label for="targetPlayerId" class="form-label">菜鸡ID</label>
       <input type="text" class="form-control" id="targetPlayerId" v-model="targetPlayerId" required>
     </div>
     <div class="mb-3">
@@ -9,7 +9,7 @@
       <input type="text" class="form-control" id="dungeonName" v-model="dungeonName" required>
     </div>
     <div class="mb-3">
-      <label for="description" class="form-label">吐槽内容</label>
+      <label for="description" class="form-label">菜鸡行为</label>
       <textarea class="form-control" id="description" rows="5" v-model="description" required></textarea>
     </div>
     <button type="submit" class="btn btn-primary w-100">提交吐槽</button>

@@ -14,11 +14,11 @@
       <div v-else>
         <div v-for="complaint in complaints" :key="complaint.id" class="complaint-card">
           <div class="d-flex justify-content-between">
-            <h5>被吐槽玩家: {{ complaint.targetPlayerId }}</h5>
+            <h5>菜鸡ID: {{ complaint.targetPlayerId }}</h5>
             <small>{{ formatDate(complaint.createdTime) }}</small>
           </div>
           <p class="mt-2"><strong>副本:</strong> {{ complaint.dungeonName }}</p>
-          <p><strong>描述:</strong> {{ complaint.description }}</p>
+          <p><strong>菜鸡行为:</strong> {{ complaint.description }}</p>
           <button class="btn btn-sm btn-outline-danger" @click="deleteComplaint(complaint.id)">删除</button>
         </div>
       </div>
