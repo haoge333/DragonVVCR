@@ -48,7 +48,7 @@
           <button class="nav-link" id="myComplaints-tab" data-bs-toggle="tab" data-bs-target="#myComplaints" type="button" role="tab" aria-controls="myComplaints" aria-selected="false">我的吐槽</button>
         </li>
 
-        <li class="nav-item" role="presentation">
+        <li class="nav-item" role="presentation" v-if="isAdmin">
           <button class="nav-link" id="dictionary-tab" data-bs-toggle="tab" data-bs-target="#dictionary" type="button" role="tab" aria-controls="dictionary" aria-selected="false">
             <i class="bi bi-book-half me-1"></i>字典管理
           </button>
@@ -84,7 +84,7 @@
 
 
         <!-- 字典管理 -->
-        <div class="tab-pane fade" id="dictionary" role="tabpanel" aria-labelledby="dictionary-tab">
+        <div v-if="isAdmin" class="tab-pane fade" id="dictionary" role="tabpanel" aria-labelledby="dictionary-tab">
           <DictionaryManagement />
         </div>
       </div>
@@ -207,7 +207,7 @@
 </style>
 
 <script>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import userService from '../services/userService';
 import LoginForm from '../components/LoginForm.vue';
 import RegisterForm from '../components/RegisterForm.vue';
@@ -249,6 +249,13 @@ export default {
         }
       }
     };
+
+    // 判断当前用户是否为管理员
+    const isAdmin = computed(() => {
+      if (!currentUser.value) return false;
+      // 使用用户名判断是否是管理员
+      return currentUser.value.username === 'admin';
+    });
 
     // 显示提示消息
     const showToast = (message, type = 'info') => {
@@ -308,6 +315,7 @@ export default {
     return {
       isLoggedIn,
       currentUser,
+      isAdmin,
       toastMessage,
       handleLoginSuccess,
       handleRegisterSuccess,
