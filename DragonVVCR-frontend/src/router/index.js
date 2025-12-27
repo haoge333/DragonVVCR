@@ -5,6 +5,16 @@ const routes = [
     path: '/',
     name: 'Home',
     component: () => import('../views/Home.vue')
+  },
+  {
+    path: '/dictionary-type',
+    name: 'DictionaryTypeManagement',
+    component: () => import('../views/DictionaryTypeManagement.vue')
+  },
+  {
+    path: '/dictionary',
+    name: 'DictionaryManagement',
+    component: () => import('../views/DictionaryManagement.vue')
   }
 ]
 
