@@ -36,3 +36,8 @@ CREATE TABLE IF NOT EXISTS complaints (
     INDEX idx_dungeon_name (dungeon_name),
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- 初始化admin用户
+INSERT INTO users (username, password, region, server, game_id) 
+VALUES ('admin', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9lBOsl7iKTVEFDa', '怀旧服零区', '管理员服务器', '龙之谷怀旧服GM')
+ON DUPLICATE KEY UPDATE username = username;

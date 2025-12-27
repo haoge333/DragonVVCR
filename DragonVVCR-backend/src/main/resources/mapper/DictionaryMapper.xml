@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dragonvvcr.mapper.DictionaryMapper">
+
+    <select id="selectDictionaryPage" resultType="com.dragonvvcr.entity.Dictionary">
+        SELECT
+            id, dict_code, dict_name, dict_type, dict_level, parent_id, dict_value, sort_order, status, remark, create_time, update_time, create_by, update_by
+        FROM
+            dictionary
+        <where>
+            <if test="dictCode != null and dictCode != ''">
+                AND dict_code LIKE CONCAT('%', #{dictCode}, '%')
+            </if>
+            <if test="dictName != null and dictName != ''">
+                AND dict_name LIKE CONCAT('%', #{dictName}, '%')
+            </if>
+            <if test="dictType != null and dictType != ''">
+                AND dict_type = #{dictType}
+            </if>
+            <if test="status != null and status != ''">
+                AND status = #{status}
+            </if>
+        </where>
+        ORDER BY sort_order ASC, create_time DESC
+    </select>
+
+    <select id="selectDictionaryByType" resultType="com.dragonvvcr.entity.Dictionary">
+        SELECT
+            id, dict_code, dict_name, dict_type, dict_level, parent_id, dict_value, sort_order, status, remark, create_time, update_time, create_by, update_by
+        FROM
+            dictionary
+        WHERE
+            dict_type = #{dictType} AND status = '0'
+        ORDER BY
+            sort_order ASC
+    </select>
+
+    <select id="selectDictionaryByParentId" resultType="com.dragonvvcr.entity.Dictionary">
+        SELECT
+            id, dict_code, dict_name, dict_type, dict_level, parent_id, dict_value, sort_order, status, remark, create_time, update_time, create_by, update_by
+        FROM
+            dictionary
+        WHERE
+            parent_id = #{parentId} AND status = '0'
+        ORDER BY
+            sort_order ASC
+    </select>
+
+</mapper>
