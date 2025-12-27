@@ -363,18 +363,18 @@
     </div>
 
     <!-- 删除确认模态框 -->
-    <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-hidden="true">
+    <div v-if="showDeleteModal" class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5); z-index: 1050;">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title">确认删除</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <button type="button" class="btn-close" @click="closeDeleteModal"></button>
           </div>
           <div class="modal-body">
             <p>确定要删除该字典吗？此操作不可恢复。</p>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+            <button type="button" class="btn btn-secondary" @click="closeDeleteModal">取消</button>
             <button type="button" class="btn btn-danger" @click="deleteDictionary">确认删除</button>
           </div>
         </div>
@@ -382,18 +382,18 @@
     </div>
 
     <!-- 批量删除确认模态框 -->
-    <div class="modal fade" id="batchDeleteConfirmModal" tabindex="-1" aria-hidden="true">
+    <div v-if="showBatchDeleteModal" class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5); z-index: 1050;">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title">批量删除确认</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <button type="button" class="btn-close" @click="closeBatchDeleteModal"></button>
           </div>
           <div class="modal-body">
             <p>确定要删除选中的 {{ selectedIds.length }} 个字典吗？此操作不可恢复。</p>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+            <button type="button" class="btn btn-secondary" @click="closeBatchDeleteModal">取消</button>
             <button type="button" class="btn btn-danger" @click="batchDeleteDictionaries">确认删除</button>
           </div>
         </div>
@@ -440,18 +440,18 @@
     </div>
 
     <!-- 字典类型删除确认模态框 -->
-    <div class="modal fade" id="typeDeleteConfirmModal" tabindex="-1" aria-hidden="true">
+    <div v-if="showTypeDeleteModal" class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5); z-index: 1050;">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title">确认删除</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <button type="button" class="btn-close" @click="closeTypeDeleteModal"></button>
           </div>
           <div class="modal-body">
             <p>确定要删除该字典类型吗？此操作不可恢复。</p>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+            <button type="button" class="btn btn-secondary" @click="closeTypeDeleteModal">取消</button>
             <button type="button" class="btn btn-danger" @click="deleteDictionaryType">确认删除</button>
           </div>
         </div>
@@ -459,18 +459,18 @@
     </div>
 
     <!-- 字典类型批量删除确认模态框 -->
-    <div class="modal fade" id="typeBatchDeleteConfirmModal" tabindex="-1" aria-hidden="true">
+    <div v-if="showTypeBatchDeleteModal" class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5); z-index: 1050;">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title">批量删除确认</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <button type="button" class="btn-close" @click="closeTypeBatchDeleteModal"></button>
           </div>
           <div class="modal-body">
             <p>确定要删除选中的 {{ typeSelectedIds.length }} 个字典类型吗？此操作不可恢复。</p>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+            <button type="button" class="btn btn-secondary" @click="closeTypeBatchDeleteModal">取消</button>
             <button type="button" class="btn btn-danger" @click="batchDeleteDictionaryTypes">确认删除</button>
           </div>
         </div>
@@ -540,6 +540,10 @@ export default {
     const isEdit = ref(false);
     const deleteId = ref(null);
     const showModal = ref(false);
+    const showDeleteModal = ref(false);
+    const showBatchDeleteModal = ref(false);
+    const showTypeDeleteModal = ref(false);
+    const showTypeBatchDeleteModal = ref(false);
     
     // 字典类型相关
     const typePagination = reactive({
@@ -814,8 +818,12 @@ export default {
     // 确认删除
     const confirmDelete = (id) => {
       deleteId.value = id;
-      deleteConfirmModal.value = new bootstrap.Modal(document.getElementById('deleteConfirmModal'));
-      deleteConfirmModal.value.show();
+      showDeleteModal.value = true;
+    };
+
+    // 关闭删除模态框
+    const closeDeleteModal = () => {
+      showDeleteModal.value = false;
     };
 
     // 删除字典
@@ -823,7 +831,7 @@ export default {
       try {
         await dictionaryService.deleteDictionary(deleteId.value);
         showToast('删除字典成功', 'success');
-        deleteConfirmModal.value.hide();
+        showDeleteModal.value = false;
         if (isTreeView.value) {
           getTreeData();
         } else {
@@ -847,8 +855,12 @@ export default {
     // 确认批量删除
     const confirmBatchDelete = () => {
       if (selectedIds.value.length === 0) return;
-      batchDeleteConfirmModal.value = new bootstrap.Modal(document.getElementById('batchDeleteConfirmModal'));
-      batchDeleteConfirmModal.value.show();
+      showBatchDeleteModal.value = true;
+    };
+
+    // 关闭批量删除模态框
+    const closeBatchDeleteModal = () => {
+      showBatchDeleteModal.value = false;
     };
 
     // 批量删除字典
@@ -856,7 +868,7 @@ export default {
       try {
         await dictionaryService.batchDeleteDictionary(selectedIds.value);
         showToast('批量删除字典成功', 'success');
-        batchDeleteConfirmModal.value.hide();
+        showBatchDeleteModal.value = false;
         selectedIds.value = [];
         selectAll.value = false;
         if (isTreeView.value) {
@@ -987,15 +999,19 @@ export default {
 
     const confirmTypeDelete = (id) => {
       typeDeleteId.value = id;
-      typeDeleteConfirmModal.value = new bootstrap.Modal(document.getElementById('typeDeleteConfirmModal'));
-      typeDeleteConfirmModal.value.show();
+      showTypeDeleteModal.value = true;
+    };
+
+    // 关闭字典类型删除模态框
+    const closeTypeDeleteModal = () => {
+      showTypeDeleteModal.value = false;
     };
 
     const deleteDictionaryType = async () => {
       try {
         await dictionaryTypeService.deleteDictionaryType(typeDeleteId.value);
         showToast('删除字典类型成功', 'success');
-        typeDeleteConfirmModal.value.hide();
+        showTypeDeleteModal.value = false;
         getDictionaryTypesList();
         getDictionaryTypes(); // 更新字典类型下拉选项
       } catch (error) {
@@ -1014,15 +1030,19 @@ export default {
 
     const confirmTypeBatchDelete = () => {
       if (typeSelectedIds.value.length === 0) return;
-      typeBatchDeleteConfirmModal.value = new bootstrap.Modal(document.getElementById('typeBatchDeleteConfirmModal'));
-      typeBatchDeleteConfirmModal.value.show();
+      showTypeBatchDeleteModal.value = true;
+    };
+
+    // 关闭字典类型批量删除模态框
+    const closeTypeBatchDeleteModal = () => {
+      showTypeBatchDeleteModal.value = false;
     };
 
     const batchDeleteDictionaryTypes = async () => {
       try {
         await dictionaryTypeService.batchDeleteDictionaryType(typeSelectedIds.value);
         showToast('批量删除字典类型成功', 'success');
-        typeBatchDeleteConfirmModal.value.hide();
+        showTypeBatchDeleteModal.value = false;
         typeSelectedIds.value = [];
         typeSelectAll.value = false;
         getDictionaryTypesList();
@@ -1060,6 +1080,10 @@ export default {
       selectAll,
       isEdit,
       showModal,
+      showDeleteModal,
+      showBatchDeleteModal,
+      showTypeDeleteModal,
+      showTypeBatchDeleteModal,
       typePagination,
       typeSearchParams,
       typeFormData,
@@ -1076,6 +1100,10 @@ export default {
       openAddModal,
       openEditModal,
       closeModal,
+      closeDeleteModal,
+      closeBatchDeleteModal,
+      closeTypeDeleteModal,
+      closeTypeBatchDeleteModal,
       submitForm,
       confirmDelete,
       deleteDictionary,
