@@ -15,7 +15,7 @@
         <div v-for="complaint in complaints" :key="complaint.id" class="complaint-card">
           <div class="card-header d-flex justify-content-between align-items-center">
             <h5 class="mb-0">菜鸡ID: {{ complaint.targetPlayerId }}</h5>
-            <small class="text-muted">{{ formatDate(complaint.createdTime) }}</small>
+            <small class="text-muted"><strong>被坑时间:</strong> {{ formatDate(complaint.pitfallTime) }}</small>
           </div>
           <div class="card-body">
             <p class="mb-2"><strong>副本:</strong> {{ complaint.dungeonName }}</p>

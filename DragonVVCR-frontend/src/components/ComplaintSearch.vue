@@ -43,7 +43,17 @@
           </div>
           <div class="card-body">
             <p class="mb-2"><strong>副本名称:</strong> {{ complaint.dungeonName }}</p>
-            <p><strong>菜鸡行为:</strong> {{ complaint.description }}</p>
+            <div class="behavior-section">
+              <h6 class="behavior-title">菜鸡行为:</h6>
+              <div class="behavior-content" :class="{ 'expanded': isExpanded[complaint.id] }">
+                {{ complaint.description }}
+              </div>
+              <button v-if="shouldShowExpandButton(complaint.description)" 
+                      class="expand-btn" 
+                      @click="toggleExpand(complaint.id)">
+                {{ isExpanded[complaint.id] ? '收起' : '详情' }}
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -85,7 +95,7 @@
 }
 
 .card-header {
-  padding: 18px 20px;
+  padding: 12px 20px;
   border-bottom: 1px solid #e9ecef;
   background-color: #f8f9fa;
   border-top-left-radius: 10px;
@@ -113,6 +123,100 @@
 .card-body strong {
   color: #495057;
   font-weight: 600;
+}
+
+.behavior-section {
+  margin-bottom: 15px;
+}
+
+.behavior-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #495057;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+}
+
+.behavior-title::after {
+  content: "";
+  flex-grow: 1;
+  height: 1px;
+  background: #e9ecef;
+  margin-left: 10px;
+}
+
+.behavior-content {
+  background-color: #f8f9fa;
+  border-left: 3px solid #007bff;
+  padding: 12px 15px;
+  border-radius: 0 6px 6px 0;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  word-wrap: break-word;
+  word-break: break-word;
+  white-space: pre-wrap;
+  max-height: 100px;
+  overflow: hidden;
+  position: relative;
+  transition: max-height 0.3s ease;
+}
+
+.behavior-content.expanded {
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.behavior-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.behavior-content::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.behavior-content::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+.behavior-content::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+.expand-btn {
+  background: none;
+  border: none;
+  color: #007bff;
+  font-size: 0.85rem;
+  padding: 5px 0;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  margin-top: 5px;
+  transition: color 0.2s;
+}
+
+.expand-btn:hover {
+  color: #0056b3;
+  text-decoration: underline;
+}
+
+.expand-btn::before {
+  content: "";
+  display: inline-block;
+  width: 0;
+  height: 0;
+  margin-right: 5px;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 4px solid currentColor;
+  transition: transform 0.2s;
+}
+
+.expand-btn:hover::before {
+  transform: translateY(1px);
 }
 
 .empty-message {
@@ -151,7 +255,7 @@
     flex-direction: column;
     align-items: flex-start !important;
     gap: 10px;
-    padding: 15px;
+    padding: 10px;
   }
 
   .card-header h5 {
@@ -184,7 +288,7 @@
   }
 
   .card-header {
-    padding: 16px 18px;
+    padding: 12px 18px;
   }
 
   .card-body {
@@ -199,7 +303,7 @@
   }
 
   .card-header {
-    padding: 20px 25px;
+    padding: 15px 25px;
   }
 
   .card-body {
@@ -222,6 +326,7 @@ export default {
     const loading = ref(false);
     const hasSearched = ref(false);
     const dungeonTypes = ref([]);
+    const isExpanded = ref({});
 
     // 获取副本类型字典
     const getDungeonTypes = async () => {
@@ -268,6 +373,17 @@ export default {
       return new Date(dateString).toLocaleString();
     };
 
+    // 判断是否需要显示展开按钮
+    const shouldShowExpandButton = (text) => {
+      // 如果文本长度超过100个字符，则显示展开按钮
+      return text && text.length > 100;
+    };
+
+    // 切换展开/收起状态
+    const toggleExpand = (id) => {
+      isExpanded.value[id] = !isExpanded.value[id];
+    };
+
     // 监听搜索类型变化
     watch(searchType, (newType, oldType) => {
       if (newType === 'dungeon' && oldType === 'player' && dungeonTypes.value.length > 0) {
@@ -291,8 +407,11 @@ export default {
       loading,
       hasSearched,
       dungeonTypes,
+      isExpanded,
       handleSearch,
-      formatDate
+      formatDate,
+      shouldShowExpandButton,
+      toggleExpand
     };
   }
 };

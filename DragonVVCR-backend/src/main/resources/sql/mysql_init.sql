@@ -105,3 +105,19 @@ VALUES
     ('9', '暂停', 'sys_job_status', 1, 0, '1', 2, '0', '暂停状态', NOW(), 'system'),
     ('10', '默认', 'sys_job_group', 1, 0, 'DEFAULT', 1, '0', '默认分组', NOW(), 'system'),
     ('11', '系统', 'sys_job_group', 1, 0, 'SYSTEM', 2, '0', '系统分组', NOW(), 'system');
+
+-- 副本类型
+INSERT INTO dictionary_type (id, type_code, type_name, status, remark, create_time, update_time, create_by, update_by)
+VALUES (6, 'sys_nest_type', '副本类型', '0', '副本类型', NOW(), NULL, NULL, NULL);
+
+-- 副本类型字典-第一条记录：沙龙硬核
+INSERT INTO dictionary (id, dict_code, dict_name, dict_type, dict_level, parent_id, dict_value, sort_order, status, remark, create_time, update_time)
+VALUES (12, 'shalongyinghe', '沙龙硬核', 'sys_nest_type', 1, 0, '沙龙硬核', 1, '0', '副本类型-沙龙硬核', '2025-12-27 17:49:05', NULL);
+
+-- 副本类型字典-第二条记录：绿龙经典
+INSERT INTO dictionary (id, dict_code, dict_name, dict_type, dict_level, parent_id, dict_value, sort_order, status, remark, create_time, update_time)
+VALUES (15, 'lvlongjingdian', '绿龙经典', 'sys_nest_type', 1, 0, '绿龙经典', 3, '0', '副本类型-绿龙经典', '2025-12-27 17:49:27', NULL);
+
+-- 副本类型字典-第三条记录：绿龙硬核
+INSERT INTO dictionary (id, dict_code, dict_name, dict_type, dict_level, parent_id, dict_value, sort_order, status, remark, create_time, update_time)
+VALUES (22, 'lvlongyinghe', '绿龙硬核', 'sys_nest_type', 1, 0, '绿龙硬核', 2, '0', '副本类型-绿龙硬核', '2025-12-27 17:48:35', '2025-12-27 17:49:21');
