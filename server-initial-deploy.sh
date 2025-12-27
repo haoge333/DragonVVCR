@@ -24,15 +24,31 @@ echo "===== 2. 停止可能存在的服务 ====="
 # 停止可能存在的服务
 docker compose down || true
 
-echo "===== 3. 构建并启动所有服务 ====="
+echo "===== 3. 编译前端项目 ====="
+# 进入前端目录并编译
+cd DragonVVCR-frontend
+echo "安装前端依赖..."
+npm install
+echo "构建前端项目..."
+npm run build
+cd ..
+
+echo "===== 4. 编译后端项目 ====="
+# 进入后端目录并编译
+cd DragonVVCR-backend
+echo "编译后端项目..."
+mvn clean package -DskipTests
+cd ..
+
+echo "===== 5. 构建并启动所有服务 ====="
 # 构建并启动所有服务（包括前端、后端、MySQL和Redis）
 docker compose up --build -d
 
-echo "===== 4. 等待服务启动 ====="
+echo "===== 6. 等待服务启动 ====="
 # 等待服务启动
 sleep 30
 
-echo "===== 5. 检查服务状态 ====="
+echo "===== 7. 检查服务状态 ====="
 # 检查服务状态
 docker compose ps
 
