@@ -319,11 +319,17 @@ export default {
     // 提交表单
     const submitForm = async () => {
       try {
+        // 创建新的表单数据对象，确保字典类型编码正确提交
+        const submitData = {
+          ...formData,
+          typeCode: formData.typeCode // 确保使用字典类型编码
+        };
+        
         if (isEdit.value) {
-          await dictionaryTypeService.updateDictionaryType(formData);
+          await dictionaryTypeService.updateDictionaryType(submitData);
           showToast('修改字典类型成功', 'success');
         } else {
-          await dictionaryTypeService.createDictionaryType(formData);
+          await dictionaryTypeService.createDictionaryType(submitData);
           showToast('新增字典类型成功', 'success');
         }
 

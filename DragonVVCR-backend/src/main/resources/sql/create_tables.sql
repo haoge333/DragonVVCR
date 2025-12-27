@@ -16,11 +16,11 @@ CREATE TABLE IF NOT EXISTS complaints (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     user_id BIGINT NOT NULL,
     target_player_id VARCHAR(255) NOT NULL,
-    dungeon_name VARCHAR(255) NOT NULL,
+    dungeon_type VARCHAR(255) NOT NULL,
     description TEXT,
     created_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     INDEX idx_user_id (user_id),
     INDEX idx_target_player_id (target_player_id),
-    INDEX idx_dungeon_name (dungeon_name),
+    INDEX idx_dungeon_type (dungeon_type),
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

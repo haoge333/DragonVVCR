@@ -8,7 +8,7 @@
       <label for="dungeonType" class="form-label">副本类型</label>
       <select class="form-select" id="dungeonType" v-model="dungeonType" required>
         <option value="">请选择副本类型</option>
-        <option v-for="item in dungeonTypes" :key="item.dictValue" :value="item.dictValue">
+        <option v-for="item in dungeonTypes" :key="item.dictCode" :value="item.dictCode">
           {{ item.dictName }}
         </option>
       </select>
@@ -144,6 +144,8 @@ export default {
 
     const handleSubmit = async () => {
       try {
+        // 确保提交的是 dictCode 而不是 dictName
+        console.log('提交的 dungeonType 值(dictCode):', dungeonType.value);
         const response = await complaintService.createComplaint({
           user: {
             id: props.userId

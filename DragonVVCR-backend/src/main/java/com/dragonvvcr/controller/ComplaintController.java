@@ -39,7 +39,7 @@ public class ComplaintController {
 
     @PostMapping
     public ResponseEntity<Complaint> createComplaint(@RequestBody Complaint complaint) {
-        logger.info("创建吐槽请求: 目标玩家={}, 副本名称={}", complaint.getTargetPlayerId(), complaint.getDungeonName());
+        logger.info("创建吐槽请求: 目标玩家={}, 副本类型={}", complaint.getTargetPlayerId(), complaint.getDungeonType());
         
         // 验证用户是否存在
         User user = userService.getUserById(complaint.getUser().getId());
@@ -103,9 +103,9 @@ public class ComplaintController {
         return ResponseEntity.ok(complaints);
     }
 
-    @GetMapping("/dungeon/{dungeonName}")
-    public ResponseEntity<List<Complaint>> getComplaintsByDungeon(@PathVariable String dungeonName) {
-        List<Complaint> complaints = complaintService.getComplaintsByDungeonName(dungeonName);
+    @GetMapping("/dungeon/{dungeonType}")
+    public ResponseEntity<List<Complaint>> getComplaintsByDungeon(@PathVariable String dungeonType) {
+        List<Complaint> complaints = complaintService.getComplaintsByDungeonType(dungeonType);
         return ResponseEntity.ok(complaints);
     }
 

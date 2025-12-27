@@ -795,11 +795,17 @@ export default {
     // 提交表单
     const submitForm = async () => {
       try {
+        // 创建新的表单数据对象，确保副本类型使用字典编码
+        const submitData = {
+          ...formData,
+          dictType: formData.dictType // 使用字典编码而不是名称
+        };
+        
         if (isEdit.value) {
-          await dictionaryService.updateDictionary(formData);
+          await dictionaryService.updateDictionary(submitData);
           showToast('修改字典成功', 'success');
         } else {
-          await dictionaryService.createDictionary(formData);
+          await dictionaryService.createDictionary(submitData);
           showToast('新增字典成功', 'success');
         }
 

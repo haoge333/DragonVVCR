@@ -15,7 +15,7 @@
         <input v-if="searchType === 'player'" type="text" class="form-control" id="playerName" v-model="keyword">
         <select v-else class="form-select" id="dungeonType" v-model="keyword">
           <option value="">请选择副本类型</option>
-          <option v-for="item in dungeonTypes" :key="item.dictValue" :value="item.dictValue">
+          <option v-for="item in dungeonTypes" :key="item.dictCode" :value="item.dictCode">
             {{ item.dictName }}
           </option>
         </select>
@@ -43,7 +43,7 @@
             <small class="text-muted">{{ formatDate(complaint.createdTime) }}</small>
           </div>
           <div class="card-body">
-            <p class="mb-2"><strong>副本类型:</strong> {{ complaint.dungeonType }}</p>
+            <p class="mb-2"><strong>副本名称:</strong> {{ complaint.dungeonName }}</p>
             <p><strong>菜鸡行为:</strong> {{ complaint.description }}</p>
           </div>
         </div>
@@ -250,6 +250,8 @@ export default {
         if (searchType.value === 'player') {
           response = await complaintService.getComplaintsByPlayer(keyword.value);
         } else {
+          // 确保提交的是 dictCode 而不是 dictName
+          console.log('搜索副本类型(dictCode):', keyword.value);
           response = await complaintService.getComplaintsByDungeon(keyword.value);
         }
 

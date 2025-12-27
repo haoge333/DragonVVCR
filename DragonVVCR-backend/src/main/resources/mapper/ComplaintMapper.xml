@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dragonvvcr.mapper.ComplaintMapper">
+
+    <resultMap id="ComplaintResultMap" type="com.dragonvvcr.entity.Complaint">
+        <id column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="target_player_id" property="targetPlayerId"/>
+        <result column="dungeon_type" property="dungeonType"/>
+        <result column="dungeonName" property="dungeonName"/>
+        <result column="description" property="description"/>
+        <result column="created_time" property="createdTime"/>
+    </resultMap>
+
+    <select id="findAllComplaints" resultMap="ComplaintResultMap">
+        SELECT c.*, d.dict_name AS dungeonName FROM complaints c
+        LEFT JOIN dictionary d ON c.dungeon_type = d.dict_code AND d.dict_type = 'sys_nest_type'
+        ORDER BY c.created_time DESC
+    </select>
+
+    <select id="findByUserId" resultMap="ComplaintResultMap">
+        SELECT c.*, d.dict_name AS dungeonName FROM complaints c
+        LEFT JOIN dictionary d ON c.dungeon_type = d.dict_code AND d.dict_type = 'sys_nest_type'
+        WHERE c.user_id = #{userId}
+    </select>
+
+    <select id="findByTargetPlayerId" resultMap="ComplaintResultMap">
+        SELECT c.*, d.dict_name AS dungeonName FROM complaints c
+        LEFT JOIN dictionary d ON c.dungeon_type = d.dict_code AND d.dict_type = 'sys_nest_type'
+        WHERE c.target_player_id = #{targetPlayerId}
+    </select>
+
+    <select id="findByDungeonType" resultMap="ComplaintResultMap">
+        SELECT c.*, d.dict_name AS dungeonName FROM complaints c
+        LEFT JOIN dictionary d ON c.dungeon_type = d.dict_code AND d.dict_type = 'sys_nest_type'
+        WHERE c.dungeon_type = #{dungeonType}
+    </select>
+
+    <select id="findByUserIdAndTargetPlayerId" resultMap="ComplaintResultMap">
+        SELECT c.*, d.dict_name AS dungeonName FROM complaints c
+        LEFT JOIN dictionary d ON c.dungeon_type = d.dict_code AND d.dict_type = 'sys_nest_type'
+        WHERE c.user_id = #{userId} AND c.target_player_id = #{targetPlayerId}
+    </select>
+
+</mapper>

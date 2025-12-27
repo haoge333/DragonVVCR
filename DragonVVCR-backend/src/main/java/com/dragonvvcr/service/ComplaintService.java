@@ -84,7 +84,7 @@ public class ComplaintService {
     }
 
     public Complaint createComplaint(Complaint complaint) {
-        logger.debug("创建吐槽: 目标玩家={}, 副本={}", complaint.getTargetPlayerId(), complaint.getDungeonName());
+        logger.debug("创建吐槽: 目标玩家={}, 副本类型={}", complaint.getTargetPlayerId(), complaint.getDungeonType());
         
         // 确保设置userId字段
         if (complaint.getUser() != null && complaint.getUser().getId() != null) {
@@ -101,8 +101,8 @@ public class ComplaintService {
 
         // 清除相关缓存
         clearRelatedCache(savedComplaint);
-        logger.info("吐槽创建成功: ID={}, 目标玩家={}, 副本={}", 
-            savedComplaint.getId(), savedComplaint.getTargetPlayerId(), savedComplaint.getDungeonName());
+        logger.info("吐槽创建成功: ID={}, 目标玩家={}, 副本类型={}", 
+            savedComplaint.getId(), savedComplaint.getTargetPlayerId(), savedComplaint.getDungeonType());
 
         return savedComplaint;
     }
@@ -151,8 +151,8 @@ public class ComplaintService {
     }
 
     private void clearRelatedCache(Complaint complaint) {
-        logger.debug("清除相关缓存: 用户ID={}, 玩家={}, 副本={}", 
-            complaint.getUserId(), complaint.getTargetPlayerId(), complaint.getDungeonName());
+        logger.debug("清除相关缓存: 用户ID={}, 玩家={}, 副本类型={}", 
+            complaint.getUserId(), complaint.getTargetPlayerId(), complaint.getDungeonType());
             
         // 清除用户吐槽列表缓存
         String userComplaintsKey = USER_COMPLAINTS_KEY_PREFIX + complaint.getUserId();
@@ -165,7 +165,7 @@ public class ComplaintService {
         logger.debug("已清除玩家吐槽列表缓存: {}", playerComplaintsKey);
 
         // 清除副本吐槽列表缓存
-        String dungeonComplaintsKey = DUNGEON_COMPLAINTS_KEY_PREFIX + complaint.getDungeonName();
+        String dungeonComplaintsKey = DUNGEON_COMPLAINTS_KEY_PREFIX + complaint.getDungeonType();
         redisUtil.delete(dungeonComplaintsKey);
         logger.debug("已清除副本吐槽列表缓存: {}", dungeonComplaintsKey);
 
