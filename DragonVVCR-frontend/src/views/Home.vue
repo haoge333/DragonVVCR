@@ -47,11 +47,7 @@
         <li class="nav-item" role="presentation">
           <button class="nav-link" id="myComplaints-tab" data-bs-toggle="tab" data-bs-target="#myComplaints" type="button" role="tab" aria-controls="myComplaints" aria-selected="false">我的吐槽</button>
         </li>
-        <li class="nav-item" role="presentation">
-          <button class="nav-link" id="dictionaryType-tab" data-bs-toggle="tab" data-bs-target="#dictionaryType" type="button" role="tab" aria-controls="dictionaryType" aria-selected="false">
-            <i class="bi bi-book me-1"></i>字典类型管理
-          </button>
-        </li>
+
         <li class="nav-item" role="presentation">
           <button class="nav-link" id="dictionary-tab" data-bs-toggle="tab" data-bs-target="#dictionary" type="button" role="tab" aria-controls="dictionary" aria-selected="false">
             <i class="bi bi-book-half me-1"></i>字典管理
@@ -85,10 +81,7 @@
           <ComplaintSearch />
         </div>
 
-        <!-- 字典类型管理 -->
-        <div class="tab-pane fade" id="dictionaryType" role="tabpanel" aria-labelledby="dictionaryType-tab">
-          <DictionaryTypeManagement />
-        </div>
+
 
         <!-- 字典管理 -->
         <div class="tab-pane fade" id="dictionary" role="tabpanel" aria-labelledby="dictionary-tab">
@@ -223,7 +216,6 @@ import ComplaintList from '../components/ComplaintList.vue';
 import MyComplaints from '../components/MyComplaints.vue';
 import ComplaintStats from '../components/ComplaintStats.vue';
 import ComplaintSearch from '../components/ComplaintSearch.vue';
-import DictionaryTypeManagement from '../views/DictionaryTypeManagement.vue';
 import DictionaryManagement from '../views/DictionaryManagement.vue';
 import * as bootstrap from 'bootstrap';
 
@@ -237,7 +229,6 @@ export default {
     MyComplaints,
     ComplaintStats,
     ComplaintSearch,
-    DictionaryTypeManagement,
     DictionaryManagement
   },
   setup() {
