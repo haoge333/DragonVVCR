@@ -14,7 +14,6 @@
         </label>
         <input v-if="searchType === 'player'" type="text" class="form-control" id="playerName" v-model="keyword">
         <select v-else class="form-select" id="dungeonType" v-model="keyword">
-          <option value="">请选择副本类型</option>
           <option v-for="item in dungeonTypes" :key="item.dictCode" :value="item.dictCode">
             {{ item.dictName }}
           </option>
@@ -210,7 +209,7 @@
 </style>
 
 <script>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import complaintService from '../services/complaintService';
 import dictionaryService from '../services/dictionaryService';
 
@@ -230,6 +229,7 @@ export default {
         const response = await dictionaryService.getDictionaryByType('sys_nest_type');
         if (response.data) {
           dungeonTypes.value = response.data;
+          // 初始加载时不需要设置默认值，因为默认搜索类型是玩家ID
         }
       } catch (error) {
         console.error('获取副本类型失败:', error);
@@ -267,6 +267,17 @@ export default {
     const formatDate = (dateString) => {
       return new Date(dateString).toLocaleString();
     };
+
+    // 监听搜索类型变化
+    watch(searchType, (newType, oldType) => {
+      if (newType === 'dungeon' && oldType === 'player' && dungeonTypes.value.length > 0) {
+        // 从玩家ID切换到副本类型时，设置默认值为第一个副本类型
+        keyword.value = dungeonTypes.value[0].dictCode;
+      } else if (newType === 'player') {
+        // 切换到玩家ID时，清空关键字
+        keyword.value = '';
+      }
+    });
 
     // 组件挂载时获取字典数据
     onMounted(() => {

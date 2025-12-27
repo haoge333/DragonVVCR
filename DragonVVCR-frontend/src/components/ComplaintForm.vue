@@ -7,7 +7,6 @@
     <div class="mb-3">
       <label for="dungeonType" class="form-label">副本类型</label>
       <select class="form-select" id="dungeonType" v-model="dungeonType" required>
-        <option value="">请选择副本类型</option>
         <option v-for="item in dungeonTypes" :key="item.dictCode" :value="item.dictCode">
           {{ item.dictName }}
         </option>
@@ -136,6 +135,10 @@ export default {
         const response = await dictionaryService.getDictionaryByType('sys_nest_type');
         if (response.data) {
           dungeonTypes.value = response.data;
+          // 设置默认选中第一个副本类型
+          if (dungeonTypes.value.length > 0) {
+            dungeonType.value = dungeonTypes.value[0].dictCode;
+          }
         }
       } catch (error) {
         console.error('获取副本类型失败:', error);
