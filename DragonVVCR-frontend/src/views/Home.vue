@@ -48,10 +48,14 @@
           <button class="nav-link" id="myComplaints-tab" data-bs-toggle="tab" data-bs-target="#myComplaints" type="button" role="tab" aria-controls="myComplaints" aria-selected="false">我的吐槽</button>
         </li>
         <li class="nav-item" role="presentation">
-          <button class="nav-link" id="dictionaryType-tab" data-bs-toggle="tab" data-bs-target="#dictionaryType" type="button" role="tab" aria-controls="dictionaryType" aria-selected="false">字典类型管理</button>
+          <button class="nav-link" id="dictionaryType-tab" data-bs-toggle="tab" data-bs-target="#dictionaryType" type="button" role="tab" aria-controls="dictionaryType" aria-selected="false">
+            <i class="bi bi-book me-1"></i>字典类型管理
+          </button>
         </li>
         <li class="nav-item" role="presentation">
-          <button class="nav-link" id="dictionary-tab" data-bs-toggle="tab" data-bs-target="#dictionary" type="button" role="tab" aria-controls="dictionary" aria-selected="false">字典管理</button>
+          <button class="nav-link" id="dictionary-tab" data-bs-toggle="tab" data-bs-target="#dictionary" type="button" role="tab" aria-controls="dictionary" aria-selected="false">
+            <i class="bi bi-book-half me-1"></i>字典管理
+          </button>
         </li>
       </ul>
 
