@@ -5,8 +5,13 @@
       <input type="text" class="form-control" id="targetPlayerId" v-model="targetPlayerId" required>
     </div>
     <div class="mb-3">
-      <label for="dungeonName" class="form-label">副本名称</label>
-      <input type="text" class="form-control" id="dungeonName" v-model="dungeonName" required>
+      <label for="dungeonType" class="form-label">副本类型</label>
+      <select class="form-select" id="dungeonType" v-model="dungeonType" required>
+        <option value="">请选择副本类型</option>
+        <option v-for="item in dungeonTypes" :key="item.dictValue" :value="item.dictValue">
+          {{ item.dictName }}
+        </option>
+      </select>
     </div>
     <div class="mb-3">
       <label for="description" class="form-label">菜鸡行为</label>
@@ -106,8 +111,9 @@
 </style>
 
 <script>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import complaintService from '../services/complaintService';
+import dictionaryService from '../services/dictionaryService';
 
 export default {
   name: 'ComplaintForm',
@@ -120,8 +126,21 @@ export default {
   emits: ['submit-success'],
   setup(props, { emit }) {
     const targetPlayerId = ref('');
-    const dungeonName = ref('');
+    const dungeonType = ref('');
     const description = ref('');
+    const dungeonTypes = ref([]);
+
+    // 获取副本类型字典
+    const getDungeonTypes = async () => {
+      try {
+        const response = await dictionaryService.getDictionaryByType('sys_nest_type');
+        if (response.data) {
+          dungeonTypes.value = response.data;
+        }
+      } catch (error) {
+        console.error('获取副本类型失败:', error);
+      }
+    };
 
     const handleSubmit = async () => {
       try {
@@ -130,14 +149,14 @@ export default {
             id: props.userId
           },
           targetPlayerId: targetPlayerId.value,
-          dungeonName: dungeonName.value,
+          dungeonType: dungeonType.value,
           description: description.value
         });
 
         if (response.data.id) {
           // 清空表单
           targetPlayerId.value = '';
-          dungeonName.value = '';
+          dungeonType.value = '';
           description.value = '';
 
           emit('submit-success');
@@ -150,10 +169,16 @@ export default {
       }
     };
 
+    // 组件挂载时获取字典数据
+    onMounted(() => {
+      getDungeonTypes();
+    });
+
     return {
       targetPlayerId,
-      dungeonName,
+      dungeonType,
       description,
+      dungeonTypes,
       handleSubmit
     };
   }
