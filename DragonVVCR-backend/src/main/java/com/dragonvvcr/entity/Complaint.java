@@ -23,7 +23,10 @@ public class Complaint implements Serializable {
     @TableField("target_player_id")
     private String targetPlayerId;
 
-    @TableField("dungeon_name")
+    @TableField("dungeon_type")
+    private String dungeonType;
+
+    @TableField(exist = false)
     private String dungeonName;
 
     @TableField("description")

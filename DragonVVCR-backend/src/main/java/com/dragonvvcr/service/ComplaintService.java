@@ -71,12 +71,12 @@ public class ComplaintService {
         return complaints;
     }
 
-    public List<Complaint> getComplaintsByDungeonName(String dungeonName) {
-        String key = DUNGEON_COMPLAINTS_KEY_PREFIX + dungeonName;
+    public List<Complaint> getComplaintsByDungeonType(String dungeonType) {
+        String key = DUNGEON_COMPLAINTS_KEY_PREFIX + dungeonType;
         List<Complaint> complaints = redisUtil.getList(key, Complaint.class);
 
         if (complaints == null) {
-            complaints = complaintMapper.findByDungeonName(dungeonName);
+            complaints = complaintMapper.findByDungeonType(dungeonType);
             redisUtil.set(key, complaints, 30, TimeUnit.MINUTES);
         }
 
