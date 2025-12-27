@@ -4,13 +4,29 @@
     <div class="row">
       <div class="col-12">
         <div class="card">
-          <div class="card-header d-flex justify-content-between align-items-center">
+          <div class="card-header">
             <h4 class="mb-0">字典管理</h4>
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#dictionaryModal" @click="openAddModal">
-              <i class="bi bi-plus-circle me-1"></i>新增字典
-            </button>
           </div>
           <div class="card-body">
+            <!-- 内部标签页 -->
+            <ul class="nav nav-tabs mb-3" id="dictionaryTab" role="tablist">
+              <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="dictionary-tab" data-bs-toggle="tab" data-bs-target="#dictionary-content" type="button" role="tab" aria-controls="dictionary-content" aria-selected="true">字典管理</button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" id="dictionaryType-tab" data-bs-toggle="tab" data-bs-target="#dictionaryType-content" type="button" role="tab" aria-controls="dictionaryType-content" aria-selected="false">字典类型管理</button>
+              </li>
+            </ul>
+            
+            <div class="tab-content" id="dictionaryTabContent">
+              <!-- 字典管理标签页 -->
+              <div class="tab-pane fade show active" id="dictionary-content" role="tabpanel" aria-labelledby="dictionary-tab">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                  <div></div>
+                  <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#dictionaryModal" @click="openAddModal">
+                    <i class="bi bi-plus-circle me-1"></i>新增字典
+                  </button>
+                </div>
             <!-- 搜索区域 -->
             <div class="row mb-3">
               <div class="col-md-2">
@@ -162,6 +178,108 @@
                 </ul>
               </nav>
             </div>
+              </div>
+              
+              <!-- 字典类型管理标签页 -->
+              <div class="tab-pane fade" id="dictionaryType-content" role="tabpanel" aria-labelledby="dictionaryType-tab">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                  <div></div>
+                  <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#dictionaryTypeModal" @click="openTypeAddModal">
+                    <i class="bi bi-plus-circle me-1"></i>新增字典类型
+                  </button>
+                </div>
+                
+                <!-- 字典类型搜索区域 -->
+                <div class="row mb-3">
+                  <div class="col-md-3">
+                    <input type="text" class="form-control" placeholder="字典类型编码" v-model="typeSearchParams.typeCode">
+                  </div>
+                  <div class="col-md-3">
+                    <input type="text" class="form-control" placeholder="字典类型名称" v-model="typeSearchParams.typeName">
+                  </div>
+                  <div class="col-md-3">
+                    <select class="form-select" v-model="typeSearchParams.status">
+                      <option value="">全部状态</option>
+                      <option value="0">正常</option>
+                      <option value="1">停用</option>
+                    </select>
+                  </div>
+                  <div class="col-md-3">
+                    <button class="btn btn-primary me-2" @click="searchDictionaryTypes">
+                      <i class="bi bi-search me-1"></i>搜索
+                    </button>
+                    <button class="btn btn-secondary" @click="resetTypeSearchParams">
+                      <i class="bi bi-arrow-clockwise me-1"></i>重置
+                    </button>
+                  </div>
+                </div>
+
+                <!-- 字典类型表格区域 -->
+                <div class="table-responsive">
+                  <table class="table table-hover">
+                    <thead class="table-light">
+                      <tr>
+                        <th><input type="checkbox" v-model="typeSelectAll" @change="toggleTypeSelectAll"></th>
+                        <th>字典类型编码</th>
+                        <th>字典类型名称</th>
+                        <th>状态</th>
+                        <th>备注</th>
+                        <th>创建时间</th>
+                        <th>操作</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr v-for="item in dictionaryTypesList" :key="item.id">
+                        <td><input type="checkbox" v-model="typeSelectedIds" :value="item.id"></td>
+                        <td>{{ item.typeCode }}</td>
+                        <td>{{ item.typeName }}</td>
+                        <td>
+                          <span :class="item.status === '0' ? 'badge bg-success' : 'badge bg-danger'">
+                            {{ item.status === '0' ? '正常' : '停用' }}
+                          </span>
+                        </td>
+                        <td>{{ item.remark }}</td>
+                        <td>{{ formatDate(item.createTime) }}</td>
+                        <td>
+                          <button class="btn btn-sm btn-outline-primary me-1" @click="openTypeEditModal(item)">
+                            <i class="bi bi-pencil"></i>
+                          </button>
+                          <button class="btn btn-sm btn-outline-danger" @click="confirmTypeDelete(item.id)">
+                            <i class="bi bi-trash"></i>
+                          </button>
+                        </td>
+                      </tr>
+                      <tr v-if="dictionaryTypesList.length === 0">
+                        <td colspan="7" class="text-center">暂无数据</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <!-- 字典类型分页区域 -->
+                <div class="d-flex justify-content-between align-items-center mt-3">
+                  <div>
+                    <button class="btn btn-danger me-2" :disabled="typeSelectedIds.length === 0" @click="confirmTypeBatchDelete">
+                      <i class="bi bi-trash me-1"></i>批量删除
+                    </button>
+                    <span class="text-muted">已选择 {{ typeSelectedIds.length }} 项</span>
+                  </div>
+                  <nav>
+                    <ul class="pagination mb-0">
+                      <li class="page-item" :class="{ disabled: typePagination.current <= 1 }">
+                        <a class="page-link" href="#" @click.prevent="changeTypePage(typePagination.current - 1)">上一页</a>
+                      </li>
+                      <li v-for="page in getTypePageNumbers()" :key="page" class="page-item" :class="{ active: page === typePagination.current }">
+                        <a class="page-link" href="#" @click.prevent="changeTypePage(page)">{{ page }}</a>
+                      </li>
+                      <li class="page-item" :class="{ disabled: typePagination.current >= typePagination.pages }">
+                        <a class="page-link" href="#" @click.prevent="changeTypePage(typePagination.current + 1)">下一页</a>
+                      </li>
+                    </ul>
+                  </nav>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -281,6 +399,83 @@
         </div>
       </div>
     </div>
+
+    <!-- 字典类型表单模态框 -->
+    <div v-if="showTypeModal" class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">{{ isTypeEdit ? '编辑字典类型' : '新增字典类型' }}</h5>
+            <button type="button" class="btn-close" @click="closeTypeModal"></button>
+          </div>
+          <div class="modal-body">
+            <form @submit.prevent="submitTypeForm">
+              <div class="mb-3">
+                <label for="typeCode" class="form-label">字典类型编码</label>
+                <input type="text" class="form-control" id="typeCode" v-model="typeFormData.typeCode" required>
+              </div>
+              <div class="mb-3">
+                <label for="typeName" class="form-label">字典类型名称</label>
+                <input type="text" class="form-control" id="typeName" v-model="typeFormData.typeName" required>
+              </div>
+              <div class="mb-3">
+                <label for="typeStatus" class="form-label">状态</label>
+                <select class="form-select" id="typeStatus" v-model="typeFormData.status">
+                  <option value="0">正常</option>
+                  <option value="1">停用</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label for="typeRemark" class="form-label">备注</label>
+                <textarea class="form-control" id="typeRemark" rows="3" v-model="typeFormData.remark"></textarea>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" @click="closeTypeModal">取消</button>
+            <button type="button" class="btn btn-primary" @click="submitTypeForm">保存</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 字典类型删除确认模态框 -->
+    <div class="modal fade" id="typeDeleteConfirmModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">确认删除</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <p>确定要删除该字典类型吗？此操作不可恢复。</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+            <button type="button" class="btn btn-danger" @click="deleteDictionaryType">确认删除</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 字典类型批量删除确认模态框 -->
+    <div class="modal fade" id="typeBatchDeleteConfirmModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">批量删除确认</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <p>确定要删除选中的 {{ typeSelectedIds.length }} 个字典类型吗？此操作不可恢复。</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+            <button type="button" class="btn btn-danger" @click="batchDeleteDictionaryTypes">确认删除</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -296,6 +491,7 @@ export default {
     // 数据列表
     const dictionaries = ref([]);
     const dictionaryTypes = ref([]);
+    const dictionaryTypesList = ref([]);
     const parentOptions = ref([]);
 
     // 树形视图数据
@@ -344,13 +540,65 @@ export default {
     const isEdit = ref(false);
     const deleteId = ref(null);
     const showModal = ref(false);
+    
+    // 字典类型相关
+    const typePagination = reactive({
+      current: 1,
+      size: 10,
+      total: 0,
+      pages: 0
+    });
+    
+    const typeSearchParams = reactive({
+      typeCode: '',
+      typeName: '',
+      status: ''
+    });
+    
+    const typeFormData = reactive({
+      id: null,
+      typeCode: '',
+      typeName: '',
+      status: '0',
+      remark: ''
+    });
+    
+    const typeSelectedIds = ref([]);
+    const typeSelectAll = ref(false);
+    const typeDeleteConfirmModal = ref(null);
+    const typeBatchDeleteConfirmModal = ref(null);
+    const isTypeEdit = ref(false);
+    const typeDeleteId = ref(null);
+    const showTypeModal = ref(false);
 
-    // 获取字典类型列表
+    // 获取字典类型列表（用于下拉选择）
     const getDictionaryTypes = async () => {
       try {
         const response = await dictionaryTypeService.getDictionaryTypeList();
         if (response.data) {
           dictionaryTypes.value = response.data;
+        }
+      } catch (error) {
+        console.error('获取字典类型列表失败:', error);
+        showToast('获取字典类型列表失败', 'danger');
+      }
+    };
+    
+    // 获取字典类型列表（用于字典类型管理）
+    const getDictionaryTypesList = async () => {
+      try {
+        const params = {
+          current: typePagination.current,
+          size: typePagination.size,
+          ...typeSearchParams
+        };
+
+        const response = await dictionaryTypeService.getDictionaryTypePage(params);
+
+        if (response.data && response.data.records) {
+          dictionaryTypesList.value = response.data.records;
+          typePagination.total = response.data.total;
+          typePagination.pages = Math.ceil(typePagination.total / typePagination.size);
         }
       } catch (error) {
         console.error('获取字典类型列表失败:', error);
@@ -662,14 +910,145 @@ export default {
       return container;
     };
 
+    // 字典类型相关方法
+    const searchDictionaryTypes = () => {
+      typePagination.current = 1;
+      getDictionaryTypesList();
+    };
+
+    const resetTypeSearchParams = () => {
+      typeSearchParams.typeCode = '';
+      typeSearchParams.typeName = '';
+      typeSearchParams.status = '';
+      typePagination.current = 1;
+      getDictionaryTypesList();
+    };
+
+    const changeTypePage = (page) => {
+      if (page < 1 || page > typePagination.pages) return;
+      typePagination.current = page;
+      getDictionaryTypesList();
+    };
+
+    const getTypePageNumbers = () => {
+      const pages = [];
+      const start = Math.max(1, typePagination.current - 2);
+      const end = Math.min(typePagination.pages, typePagination.current + 2);
+
+      for (let i = start; i <= end; i++) {
+        pages.push(i);
+      }
+
+      return pages;
+    };
+
+    const openTypeAddModal = () => {
+      isTypeEdit.value = false;
+      resetTypeForm();
+      showTypeModal.value = true;
+    };
+
+    const openTypeEditModal = (item) => {
+      isTypeEdit.value = true;
+      Object.assign(typeFormData, item);
+      showTypeModal.value = true;
+    };
+
+    const resetTypeForm = () => {
+      typeFormData.id = null;
+      typeFormData.typeCode = '';
+      typeFormData.typeName = '';
+      typeFormData.status = '0';
+      typeFormData.remark = '';
+    };
+
+    const closeTypeModal = () => {
+      showTypeModal.value = false;
+    };
+
+    const submitTypeForm = async () => {
+      try {
+        if (isTypeEdit.value) {
+          await dictionaryTypeService.updateDictionaryType(typeFormData);
+          showToast('修改字典类型成功', 'success');
+        } else {
+          await dictionaryTypeService.createDictionaryType(typeFormData);
+          showToast('新增字典类型成功', 'success');
+        }
+
+        showTypeModal.value = false;
+        getDictionaryTypesList();
+        getDictionaryTypes(); // 更新字典类型下拉选项
+      } catch (error) {
+        console.error('保存字典类型失败:', error);
+        showToast('保存字典类型失败', 'danger');
+      }
+    };
+
+    const confirmTypeDelete = (id) => {
+      typeDeleteId.value = id;
+      typeDeleteConfirmModal.value = new bootstrap.Modal(document.getElementById('typeDeleteConfirmModal'));
+      typeDeleteConfirmModal.value.show();
+    };
+
+    const deleteDictionaryType = async () => {
+      try {
+        await dictionaryTypeService.deleteDictionaryType(typeDeleteId.value);
+        showToast('删除字典类型成功', 'success');
+        typeDeleteConfirmModal.value.hide();
+        getDictionaryTypesList();
+        getDictionaryTypes(); // 更新字典类型下拉选项
+      } catch (error) {
+        console.error('删除字典类型失败:', error);
+        showToast('删除字典类型失败', 'danger');
+      }
+    };
+
+    const toggleTypeSelectAll = () => {
+      if (typeSelectAll.value) {
+        typeSelectedIds.value = dictionaryTypesList.value.map(item => item.id);
+      } else {
+        typeSelectedIds.value = [];
+      }
+    };
+
+    const confirmTypeBatchDelete = () => {
+      if (typeSelectedIds.value.length === 0) return;
+      typeBatchDeleteConfirmModal.value = new bootstrap.Modal(document.getElementById('typeBatchDeleteConfirmModal'));
+      typeBatchDeleteConfirmModal.value.show();
+    };
+
+    const batchDeleteDictionaryTypes = async () => {
+      try {
+        await dictionaryTypeService.batchDeleteDictionaryType(typeSelectedIds.value);
+        showToast('批量删除字典类型成功', 'success');
+        typeBatchDeleteConfirmModal.value.hide();
+        typeSelectedIds.value = [];
+        typeSelectAll.value = false;
+        getDictionaryTypesList();
+        getDictionaryTypes(); // 更新字典类型下拉选项
+      } catch (error) {
+        console.error('批量删除字典类型失败:', error);
+        showToast('批量删除字典类型失败', 'danger');
+      }
+    };
+    
+    const formatDate = (dateString) => {
+      if (!dateString) return '';
+      const date = new Date(dateString);
+      return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}:${String(date.getSeconds()).padStart(2, '0')}`;
+    };
+    
     onMounted(() => {
       getDictionaryTypes();
       getDictionaries();
+      getDictionaryTypesList();
     });
 
     return {
       dictionaries,
       dictionaryTypes,
+      dictionaryTypesList,
       parentOptions,
       treeData,
       isTreeView,
@@ -681,6 +1060,13 @@ export default {
       selectAll,
       isEdit,
       showModal,
+      typePagination,
+      typeSearchParams,
+      typeFormData,
+      typeSelectedIds,
+      typeSelectAll,
+      isTypeEdit,
+      showTypeModal,
       searchDictionaries,
       resetSearchParams,
       changePage,
@@ -695,7 +1081,21 @@ export default {
       deleteDictionary,
       toggleSelectAll,
       confirmBatchDelete,
-      batchDeleteDictionaries
+      batchDeleteDictionaries,
+      searchDictionaryTypes,
+      resetTypeSearchParams,
+      changeTypePage,
+      getTypePageNumbers,
+      openTypeAddModal,
+      openTypeEditModal,
+      closeTypeModal,
+      submitTypeForm,
+      confirmTypeDelete,
+      deleteDictionaryType,
+      toggleTypeSelectAll,
+      confirmTypeBatchDelete,
+      batchDeleteDictionaryTypes,
+      formatDate
     };
   }
 };
