@@ -5,12 +5,20 @@
         <label for="searchType" class="form-label">搜索类型</label>
         <select class="form-select" id="searchType" v-model="searchType">
           <option value="player">菜鸡ID</option>
-          <option value="dungeon">副本名称</option>
+          <option value="dungeon">副本类型</option>
         </select>
       </div>
       <div class="mb-3">
-        <label for="searchKeyword" class="form-label">关键词</label>
-        <input type="text" class="form-control" id="searchKeyword" v-model="keyword">
+        <label :for="searchType === 'player' ? 'playerName' : 'dungeonType'" class="form-label">
+          {{ searchType === 'player' ? '菜鸡名称' : '副本类型' }}
+        </label>
+        <input v-if="searchType === 'player'" type="text" class="form-control" id="playerName" v-model="keyword">
+        <select v-else class="form-select" id="dungeonType" v-model="keyword">
+          <option value="">请选择副本类型</option>
+          <option v-for="item in dungeonTypes" :key="item.dictValue" :value="item.dictValue">
+            {{ item.dictName }}
+          </option>
+        </select>
       </div>
       <div class="d-grid gap-2">
         <button @click="handleSearch" class="btn btn-primary">搜索</button>
@@ -35,7 +43,7 @@
             <small class="text-muted">{{ formatDate(complaint.createdTime) }}</small>
           </div>
           <div class="card-body">
-            <p class="mb-2"><strong>副本:</strong> {{ complaint.dungeonName }}</p>
+            <p class="mb-2"><strong>副本类型:</strong> {{ complaint.dungeonType }}</p>
             <p><strong>菜鸡行为:</strong> {{ complaint.description }}</p>
           </div>
         </div>
@@ -202,8 +210,9 @@
 </style>
 
 <script>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import complaintService from '../services/complaintService';
+import dictionaryService from '../services/dictionaryService';
 
 export default {
   name: 'ComplaintSearch',
@@ -213,10 +222,23 @@ export default {
     const searchResults = ref([]);
     const loading = ref(false);
     const hasSearched = ref(false);
+    const dungeonTypes = ref([]);
+
+    // 获取副本类型字典
+    const getDungeonTypes = async () => {
+      try {
+        const response = await dictionaryService.getDictionaryByType('sys_nest_type');
+        if (response.data) {
+          dungeonTypes.value = response.data;
+        }
+      } catch (error) {
+        console.error('获取副本类型失败:', error);
+      }
+    };
 
     const handleSearch = async () => {
       if (!keyword.value.trim()) {
-        alert('请输入搜索关键词');
+        alert(searchType.value === 'player' ? '请输入菜鸡名称' : '请选择副本类型');
         return;
       }
 
@@ -244,12 +266,18 @@ export default {
       return new Date(dateString).toLocaleString();
     };
 
+    // 组件挂载时获取字典数据
+    onMounted(() => {
+      getDungeonTypes();
+    });
+
     return {
       searchType,
       keyword,
       searchResults,
       loading,
       hasSearched,
+      dungeonTypes,
       handleSearch,
       formatDate
     };
