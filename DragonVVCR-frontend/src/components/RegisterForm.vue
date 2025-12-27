@@ -1,10 +1,10 @@
 <template>
   <form @submit.prevent="handleSubmit" class="register-form">
     <div class="mb-3">
-      <label for="registerUsername" class="form-label">游戏名</label>
+      <label for="registerUsername" class="form-label">用户名</label>
       <div class="input-group">
         <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
-        <input type="text" class="form-control" id="registerUsername" v-model="username" placeholder="请输入游戏名" required>
+        <input type="text" class="form-control" id="registerUsername" v-model="username" placeholder="请输入用户名" required>
       </div>
     </div>
     <div class="mb-3">

@@ -120,4 +120,22 @@ public class ComplaintController {
         List<ComplaintCountDTO> stats = complaintService.getMostComplainedDungeons();
         return ResponseEntity.ok(stats);
     }
+
+    @GetMapping("/list")
+    public ResponseEntity<com.baomidou.mybatisplus.core.metadata.IPage<Complaint>> getAllComplaints(
+            @RequestParam(defaultValue = "1") int pageNum,
+            @RequestParam(defaultValue = "10") int pageSize) {
+        logger.info("获取所有吐槽列表: 页码={}, 每页大小={}", pageNum, pageSize);
+
+        try {
+            com.baomidou.mybatisplus.core.metadata.IPage<Complaint> complaints = 
+                complaintService.findAllComplaints(pageNum, pageSize);
+            logger.info("成功获取所有吐槽列表: 总记录数={}, 当前页记录数={}", 
+                complaints.getTotal(), complaints.getRecords().size());
+            return ResponseEntity.ok(complaints);
+        } catch (Exception e) {
+            logger.error("获取所有吐槽列表异常: 错误: {}", e.getMessage(), e);
+            return ResponseEntity.badRequest().build();
+        }
+    }
 }

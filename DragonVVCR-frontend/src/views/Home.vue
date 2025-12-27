@@ -36,7 +36,7 @@
           <button class="nav-link active" id="complain-tab" data-bs-toggle="tab" data-bs-target="#complain" type="button" role="tab" aria-controls="complain" aria-selected="true">我要吐槽</button>
         </li>
         <li class="nav-item" role="presentation">
-          <button class="nav-link" id="myComplaints-tab" data-bs-toggle="tab" data-bs-target="#myComplaints" type="button" role="tab" aria-controls="myComplaints" aria-selected="false">吐槽列表</button>
+          <button class="nav-link" id="complaintList-tab" data-bs-toggle="tab" data-bs-target="#complaintList" type="button" role="tab" aria-controls="complaintList" aria-selected="false">吐槽列表</button>
         </li>
         <li class="nav-item" role="presentation">
           <button class="nav-link" id="stats-tab" data-bs-toggle="tab" data-bs-target="#stats" type="button" role="tab" aria-controls="stats" aria-selected="false">菜鸡统计</button>
@@ -44,12 +44,20 @@
         <li class="nav-item" role="presentation">
           <button class="nav-link" id="search-tab" data-bs-toggle="tab" data-bs-target="#search" type="button" role="tab" aria-controls="search" aria-selected="false">谁是菜鸡</button>
         </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="myComplaints-tab" data-bs-toggle="tab" data-bs-target="#myComplaints" type="button" role="tab" aria-controls="myComplaints" aria-selected="false">我的吐槽</button>
+        </li>
       </ul>
 
       <div class="tab-content" id="mainTabContent">
         <!-- 我要吐槽 -->
         <div class="tab-pane fade show active" id="complain" role="tabpanel" aria-labelledby="complain-tab">
           <ComplaintForm :user-id="currentUser.id" @submit-success="handleComplaintSubmit" />
+        </div>
+
+        <!-- 吐槽列表 -->
+        <div class="tab-pane fade" id="complaintList" role="tabpanel" aria-labelledby="complaintList-tab">
+          <ComplaintList />
         </div>
 
         <!-- 我的吐槽 -->
@@ -191,6 +199,7 @@ import userService from '../services/userService';
 import LoginForm from '../components/LoginForm.vue';
 import RegisterForm from '../components/RegisterForm.vue';
 import ComplaintForm from '../components/ComplaintForm.vue';
+import ComplaintList from '../components/ComplaintList.vue';
 import MyComplaints from '../components/MyComplaints.vue';
 import ComplaintStats from '../components/ComplaintStats.vue';
 import ComplaintSearch from '../components/ComplaintSearch.vue';
@@ -202,6 +211,7 @@ export default {
     LoginForm,
     RegisterForm,
     ComplaintForm,
+    ComplaintList,
     MyComplaints,
     ComplaintStats,
     ComplaintSearch

@@ -1,5 +1,7 @@
 package com.dragonvvcr.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.dragonvvcr.dto.ComplaintCountDTO;
 import com.dragonvvcr.entity.Complaint;
 import com.dragonvvcr.mapper.ComplaintMapper;
@@ -171,5 +173,22 @@ public class ComplaintService {
         redisUtil.delete("stats:most_complained_players");
         redisUtil.delete("stats:most_complained_dungeons");
         logger.debug("已清除统计数据缓存");
+    }
+
+    /**
+     * 分页查询所有吐槽，按创建时间降序排列
+     * @param pageNum 页码
+     * @param pageSize 每页大小
+     * @return 分页结果
+     */
+    public IPage<Complaint> findAllComplaints(int pageNum, int pageSize) {
+        logger.debug("分页查询所有吐槽: 页码={}, 每页大小={}", pageNum, pageSize);
+
+        Page<Complaint> page = new Page<>(pageNum, pageSize);
+        IPage<Complaint> result = complaintMapper.findAllComplaints(page);
+
+        logger.debug("分页查询完成: 总记录数={}, 当前页记录数={}", result.getTotal(), result.getRecords().size());
+
+        return result;
     }
 }

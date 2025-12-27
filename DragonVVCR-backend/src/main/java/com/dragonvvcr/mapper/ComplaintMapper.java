@@ -1,6 +1,8 @@
 package com.dragonvvcr.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.dragonvvcr.dto.ComplaintCountDTO;
 import com.dragonvvcr.entity.Complaint;
 import org.apache.ibatis.annotations.Mapper;
@@ -29,4 +31,12 @@ public interface ComplaintMapper extends BaseMapper<Complaint> {
 
     @Select("SELECT dungeon_name as name, COUNT(*) as count FROM complaints GROUP BY dungeon_name ORDER BY count DESC")
     List<ComplaintCountDTO> findMostComplainedDungeons();
+
+    /**
+     * 分页查询所有吐槽，按创建时间降序排列
+     * @param page 分页参数
+     * @return 分页结果
+     */
+    @Select("SELECT * FROM complaints ORDER BY created_time DESC")
+    IPage<Complaint> findAllComplaints(Page<Complaint> page);
 }

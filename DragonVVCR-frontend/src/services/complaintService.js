@@ -1,6 +1,10 @@
 import api from './api';
 
 export default {
+  // 获取所有投诉列表
+  getAllComplaints() {
+    return api.get('/complaints/list');
+  },
   // 提交投诉
   createComplaint(complaintData) {
     return api.post('/complaints', complaintData);
