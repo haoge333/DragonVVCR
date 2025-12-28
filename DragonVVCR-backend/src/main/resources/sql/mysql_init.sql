@@ -95,7 +95,7 @@ VALUES
     ('sys_daqu_type', '大区类型', '0', '大区类型字典', NOW(), 'system');
 
 -- 初始化字典数据
-INSERT INTO dictionary (dict_code, dict_name, dict_type, dict_level, parent_id, dict_value, sort_order, status, remark, create_time, create_by)
+INSERT IGNORE INTO dictionary (dict_code, dict_name, dict_type, dict_level, parent_id, dict_value, sort_order, status, remark, create_time, create_by)
 VALUES
     ('male', '男', 'sys_user_sex', 1, 0, '1', 1, '0', '性别男', NOW(), 'system'),
     ('female', '女', 'sys_user_sex', 1, 0, '2', 2, '0', '性别女', NOW(), 'system'),
