@@ -89,35 +89,28 @@ VALUES
     ('sys_notice_type', '通知类型', '0', '通知类型字典', NOW(), 'system'),
     ('sys_notice_status', '通知状态', '0', '通知状态字典', NOW(), 'system'),
     ('sys_job_status', '任务状态', '0', '任务状态字典', NOW(), 'system'),
-    ('sys_job_group', '任务分组', '0', '任务分组字典', NOW(), 'system');
+    ('sys_job_group', '任务分组', '0', '任务分组字典', NOW(), 'system'),
+    ('sys_server_type', '服务器', '0', '怀旧服服务器', now(), 'system');
 
 -- 初始化字典数据
-INSERT INTO dictionary (dict_code, dict_name, dict_type, dict_level, parent_id, dict_value, sort_order, status, remark, create_time, create_by)
+INSERT INTO dictionary (dict_name, dict_type, dict_level, parent_id, dict_value, sort_order, status, remark, create_time, create_by)
 VALUES
-    ('1', '男', 'sys_user_sex', 1, 0, '1', 1, '0', '性别男', NOW(), 'system'),
-    ('2', '女', 'sys_user_sex', 1, 0, '2', 2, '0', '性别女', NOW(), 'system'),
-    ('3', '未知', 'sys_user_sex', 1, 0, '3', 3, '0', '性别未知', NOW(), 'system'),
-    ('4', '通知', 'sys_notice_type', 1, 0, '1', 1, '0', '通知', NOW(), 'system'),
-    ('5', '公告', 'sys_notice_type', 1, 0, '2', 2, '0', '公告', NOW(), 'system'),
-    ('6', '正常', 'sys_notice_status', 1, 0, '0', 1, '0', '正常状态', NOW(), 'system'),
-    ('7', '关闭', 'sys_notice_status', 1, 0, '1', 2, '0', '关闭状态', NOW(), 'system'),
-    ('8', '正常', 'sys_job_status', 1, 0, '0', 1, '0', '正常状态', NOW(), 'system'),
-    ('9', '暂停', 'sys_job_status', 1, 0, '1', 2, '0', '暂停状态', NOW(), 'system'),
-    ('10', '默认', 'sys_job_group', 1, 0, 'DEFAULT', 1, '0', '默认分组', NOW(), 'system'),
-    ('11', '系统', 'sys_job_group', 1, 0, 'SYSTEM', 2, '0', '系统分组', NOW(), 'system');
-
--- 副本类型
-INSERT INTO dictionary_type (id, type_code, type_name, status, remark, create_time, update_time, create_by, update_by)
-VALUES (6, 'sys_nest_type', '副本类型', '0', '副本类型', NOW(), NULL, NULL, NULL);
-
--- 副本类型字典-第一条记录：沙龙硬核
-INSERT INTO dictionary (id, dict_code, dict_name, dict_type, dict_level, parent_id, dict_value, sort_order, status, remark, create_time, update_time)
-VALUES (12, 'shalongyinghe', '沙龙硬核', 'sys_nest_type', 1, 0, '沙龙硬核', 1, '0', '副本类型-沙龙硬核', '2025-12-27 17:49:05', NULL);
-
--- 副本类型字典-第二条记录：绿龙经典
-INSERT INTO dictionary (id, dict_code, dict_name, dict_type, dict_level, parent_id, dict_value, sort_order, status, remark, create_time, update_time)
-VALUES (15, 'lvlongjingdian', '绿龙经典', 'sys_nest_type', 1, 0, '绿龙经典', 3, '0', '副本类型-绿龙经典', '2025-12-27 17:49:27', NULL);
-
--- 副本类型字典-第三条记录：绿龙硬核
-INSERT INTO dictionary (id, dict_code, dict_name, dict_type, dict_level, parent_id, dict_value, sort_order, status, remark, create_time, update_time)
-VALUES (22, 'lvlongyinghe', '绿龙硬核', 'sys_nest_type', 1, 0, '绿龙硬核', 2, '0', '副本类型-绿龙硬核', '2025-12-27 17:48:35', '2025-12-27 17:49:21');
+    ('男', 'sys_user_sex', 1, 0, '1', 1, '0', '性别男', NOW(), 'system'),
+    ('女', 'sys_user_sex', 1, 0, '2', 2, '0', '性别女', NOW(), 'system'),
+    ('未知', 'sys_user_sex', 1, 0, '3', 3, '0', '性别未知', NOW(), 'system'),
+    ('通知', 'sys_notice_type', 1, 0, '1', 1, '0', '通知', NOW(), 'system'),
+    ('公告', 'sys_notice_type', 1, 0, '2', 2, '0', '公告', NOW(), 'system'),
+    ('正常', 'sys_notice_status', 1, 0, '0', 1, '0', '正常状态', NOW(), 'system'),
+    ('关闭', 'sys_notice_status', 1, 0, '1', 2, '0', '关闭状态', NOW(), 'system'),
+    ('正常', 'sys_job_status', 1, 0, '0', 1, '0', '正常状态', NOW(), 'system'),
+    ('暂停', 'sys_job_status', 1, 0, '1', 2, '0', '暂停状态', NOW(), 'system'),
+    ('默认', 'sys_job_group', 1, 0, 'DEFAULT', 1, '0', '默认分组', NOW(), 'system'),
+    ('系统', 'sys_job_group', 1, 0, 'SYSTEM', 2, '0', '系统分组', NOW(), 'system'),
+    ('沙龙硬核', 'sys_nest_type', 1, 0, '沙龙硬核', 1, '0', '副本类型-沙龙硬核', NOW(), 'system'),
+    ('绿龙经典', 'sys_nest_type', 1, 0, '绿龙经典', 3, '0', '副本类型-绿龙经典', NOW(), 'system'),
+    ('绿龙硬核', 'sys_nest_type', 1, 0, '绿龙硬核', 2, '0', '副本类型-绿龙硬核', NOW(), 'system'),
+    ('怀旧大区', 'sys_daqu_type', 1, 0, '怀旧大区', 0, '0', '', NOW(), 'system'),
+    ('1服-神圣天堂', 'sys_server_type', 1, 0, '神圣天堂', 0, '0', '怀旧服大区-1服-神圣天堂', NOW(), 'system'),
+    ('2服-特蕾西亚', 'sys_server_type', 1, 0, '2服-服特蕾西亚', 1, '0', '怀旧服大区-2服-特蕾西亚', NOW(), 'system'),
+    ('3服-阿尔泰亚', 'sys_server_type', 1, 0, '3服-阿尔泰亚', 2, '0', '怀旧服大区-3服-阿尔泰亚', NOW(), 'system'),
+    ('4服-萨芬特拉', 'sys_server_type', 1, 0, '4服-萨芬特拉', 0, '0', '怀旧服大区-4服-萨芬特拉', NOW(), 'system');
