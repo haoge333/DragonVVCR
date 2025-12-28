@@ -90,27 +90,29 @@ VALUES
     ('sys_notice_status', '通知状态', '0', '通知状态字典', NOW(), 'system'),
     ('sys_job_status', '任务状态', '0', '任务状态字典', NOW(), 'system'),
     ('sys_job_group', '任务分组', '0', '任务分组字典', NOW(), 'system'),
-    ('sys_server_type', '服务器', '0', '怀旧服服务器', now(), 'system');
+    ('sys_server_type', '服务器', '0', '怀旧服服务器', NOW(), 'system'),
+    ('sys_nest_type', '副本类型', '0', '副本类型字典', NOW(), 'system'),
+    ('sys_daqu_type', '大区类型', '0', '大区类型字典', NOW(), 'system');
 
 -- 初始化字典数据
-INSERT INTO dictionary (dict_name, dict_type, dict_level, parent_id, dict_value, sort_order, status, remark, create_time, create_by)
+INSERT INTO dictionary (dict_code, dict_name, dict_type, dict_level, parent_id, dict_value, sort_order, status, remark, create_time, create_by)
 VALUES
-    ('男', 'sys_user_sex', 1, 0, '1', 1, '0', '性别男', NOW(), 'system'),
-    ('女', 'sys_user_sex', 1, 0, '2', 2, '0', '性别女', NOW(), 'system'),
-    ('未知', 'sys_user_sex', 1, 0, '3', 3, '0', '性别未知', NOW(), 'system'),
-    ('通知', 'sys_notice_type', 1, 0, '1', 1, '0', '通知', NOW(), 'system'),
-    ('公告', 'sys_notice_type', 1, 0, '2', 2, '0', '公告', NOW(), 'system'),
-    ('正常', 'sys_notice_status', 1, 0, '0', 1, '0', '正常状态', NOW(), 'system'),
-    ('关闭', 'sys_notice_status', 1, 0, '1', 2, '0', '关闭状态', NOW(), 'system'),
-    ('正常', 'sys_job_status', 1, 0, '0', 1, '0', '正常状态', NOW(), 'system'),
-    ('暂停', 'sys_job_status', 1, 0, '1', 2, '0', '暂停状态', NOW(), 'system'),
-    ('默认', 'sys_job_group', 1, 0, 'DEFAULT', 1, '0', '默认分组', NOW(), 'system'),
-    ('系统', 'sys_job_group', 1, 0, 'SYSTEM', 2, '0', '系统分组', NOW(), 'system'),
-    ('沙龙硬核', 'sys_nest_type', 1, 0, '沙龙硬核', 1, '0', '副本类型-沙龙硬核', NOW(), 'system'),
-    ('绿龙经典', 'sys_nest_type', 1, 0, '绿龙经典', 3, '0', '副本类型-绿龙经典', NOW(), 'system'),
-    ('绿龙硬核', 'sys_nest_type', 1, 0, '绿龙硬核', 2, '0', '副本类型-绿龙硬核', NOW(), 'system'),
-    ('怀旧大区', 'sys_daqu_type', 1, 0, '怀旧大区', 0, '0', '', NOW(), 'system'),
-    ('1服-神圣天堂', 'sys_server_type', 1, 0, '神圣天堂', 0, '0', '怀旧服大区-1服-神圣天堂', NOW(), 'system'),
-    ('2服-特蕾西亚', 'sys_server_type', 1, 0, '2服-服特蕾西亚', 1, '0', '怀旧服大区-2服-特蕾西亚', NOW(), 'system'),
-    ('3服-阿尔泰亚', 'sys_server_type', 1, 0, '3服-阿尔泰亚', 2, '0', '怀旧服大区-3服-阿尔泰亚', NOW(), 'system'),
-    ('4服-萨芬特拉', 'sys_server_type', 1, 0, '4服-萨芬特拉', 0, '0', '怀旧服大区-4服-萨芬特拉', NOW(), 'system');
+    ('male', '男', 'sys_user_sex', 1, 0, '1', 1, '0', '性别男', NOW(), 'system'),
+    ('female', '女', 'sys_user_sex', 1, 0, '2', 2, '0', '性别女', NOW(), 'system'),
+    ('unknown', '未知', 'sys_user_sex', 1, 0, '3', 3, '0', '性别未知', NOW(), 'system'),
+    ('notice', '通知', 'sys_notice_type', 1, 0, '1', 1, '0', '通知', NOW(), 'system'),
+    ('announcement', '公告', 'sys_notice_type', 1, 0, '2', 2, '0', '公告', NOW(), 'system'),
+    ('normal', '正常', 'sys_notice_status', 1, 0, '0', 1, '0', '正常状态', NOW(), 'system'),
+    ('closed', '关闭', 'sys_notice_status', 1, 0, '1', 2, '0', '关闭状态', NOW(), 'system'),
+    ('job_normal', '正常', 'sys_job_status', 1, 0, '0', 1, '0', '正常状态', NOW(), 'system'),
+    ('paused', '暂停', 'sys_job_status', 1, 0, '1', 2, '0', '暂停状态', NOW(), 'system'),
+    ('default', '默认', 'sys_job_group', 1, 0, 'DEFAULT', 1, '0', '默认分组', NOW(), 'system'),
+    ('system', '系统', 'sys_job_group', 1, 0, 'SYSTEM', 2, '0', '系统分组', NOW(), 'system'),
+    ('salon_hardcore', '沙龙硬核', 'sys_nest_type', 1, 0, '沙龙硬核', 1, '0', '副本类型-沙龙硬核', NOW(), 'system'),
+    ('green_dragon_classic', '绿龙经典', 'sys_nest_type', 1, 0, '绿龙经典', 3, '0', '副本类型-绿龙经典', NOW(), 'system'),
+    ('green_dragon_hardcore', '绿龙硬核', 'sys_nest_type', 1, 0, '绿龙硬核', 2, '0', '副本类型-绿龙硬核', NOW(), 'system'),
+    ('nostalgic_region', '怀旧大区', 'sys_daqu_type', 1, 0, '怀旧大区', 0, '0', '', NOW(), 'system'),
+    ('server1_holy_paradise', '1服-神圣天堂', 'sys_server_type', 1, 0, '神圣天堂', 0, '0', '怀旧服大区-1服-神圣天堂', NOW(), 'system'),
+    ('server2_theresia', '2服-特蕾西亚', 'sys_server_type', 1, 0, '2服-特蕾西亚', 1, '0', '怀旧服大区-2服-特蕾西亚', NOW(), 'system'),
+    ('server3_althaea', '3服-阿尔泰亚', 'sys_server_type', 1, 0, '3服-阿尔泰亚', 2, '0', '怀旧服大区-3服-阿尔泰亚', NOW(), 'system'),
+    ('server4_saffron', '4服-萨芬特拉', 'sys_server_type', 1, 0, '4服-萨芬特拉', 0, '0', '怀旧服大区-4服-萨芬特拉', NOW(), 'system');
