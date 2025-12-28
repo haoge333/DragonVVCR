@@ -18,14 +18,20 @@
       <label for="registerRegion" class="form-label">大区</label>
       <div class="input-group">
         <span class="input-group-text"><i class="bi bi-geo-alt-fill"></i></span>
-        <input type="text" class="form-control" id="registerRegion" v-model="region" placeholder="请选择大区" required>
+        <select class="form-control" id="registerRegion" v-model="region" required>
+          <option value="" disabled>请选择大区</option>
+          <option v-for="item in regionOptions" :key="item.id" :value="item.dictName">{{ item.dictName }}</option>
+        </select>
       </div>
     </div>
     <div class="mb-3">
       <label for="registerServer" class="form-label">服务器</label>
       <div class="input-group">
         <span class="input-group-text"><i class="bi bi-hdd-network-fill"></i></span>
-        <input type="text" class="form-control" id="registerServer" v-model="server" placeholder="请选择服务器" required>
+        <select class="form-control" id="registerServer" v-model="server" required>
+          <option value="" disabled>请选择服务器</option>
+          <option v-for="item in serverOptions" :key="item.id" :value="item.dictName">{{ item.dictName }}</option>
+        </select>
       </div>
     </div>
     <div class="mb-4">
@@ -146,8 +152,9 @@
 </style>
 
 <script>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import userService from '../services/userService';
+import dictionaryService from '../services/dictionaryService';
 
 export default {
   name: 'RegisterForm',
@@ -158,6 +165,48 @@ export default {
     const region = ref('');
     const server = ref('');
     const gameId = ref('');
+    const regionOptions = ref([]);
+    const serverOptions = ref([]);
+
+    // 获取大区选项
+    const fetchRegionOptions = async () => {
+      try {
+        const response = await dictionaryService.getDictionaryByType('sys_daqu_type');
+        console.log('大区数据响应:', response); // 添加日志调试
+        // 直接使用返回的数组数据
+        if (response.data) {
+          regionOptions.value = response.data;
+          console.log('大区选项:', regionOptions.value); // 添加日志调试
+        } else {
+          console.error('获取大区选项失败，响应格式不正确');
+        }
+      } catch (error) {
+        console.error('获取大区选项失败:', error);
+      }
+    };
+
+    // 获取服务器选项
+    const fetchServerOptions = async () => {
+      try {
+        const response = await dictionaryService.getDictionaryByType('sys_server_type');
+        console.log('服务器数据响应:', response); // 添加日志调试
+        // 直接使用返回的数组数据
+        if (response.data) {
+          serverOptions.value = response.data;
+          console.log('服务器选项:', serverOptions.value); // 添加日志调试
+        } else {
+          console.error('获取服务器选项失败，响应格式不正确');
+        }
+      } catch (error) {
+        console.error('获取服务器选项失败:', error);
+      }
+    };
+
+    // 组件挂载时获取选项
+    onMounted(() => {
+      fetchRegionOptions();
+      fetchServerOptions();
+    });
 
     const handleSubmit = async () => {
       try {
@@ -186,6 +235,8 @@ export default {
       region,
       server,
       gameId,
+      regionOptions,
+      serverOptions,
       handleSubmit
     };
   }

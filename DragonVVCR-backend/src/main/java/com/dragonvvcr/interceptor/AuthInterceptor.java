@@ -25,7 +25,9 @@ public class AuthInterceptor implements HandlerInterceptor {
         // 登录、注册等接口不需要验证token
         if (path.contains("/api/users/login") ||
             path.contains("/api/users/register") ||
-            path.contains("/api/complaints") && request.getMethod().equals("GET")) {
+            path.contains("/api/complaints") && request.getMethod().equals("GET") ||
+            path.contains("/api/dictionary") && request.getMethod().equals("GET") ||
+            path.contains("/api/dictionary-type") && request.getMethod().equals("GET")) {
             return true;
         }
 
