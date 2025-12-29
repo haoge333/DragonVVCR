@@ -29,6 +29,7 @@ public class ComplaintService {
     private static final String USER_COMPLAINTS_KEY_PREFIX = "user:complaints:";
     private static final String PLAYER_COMPLAINTS_KEY_PREFIX = "player:complaints:";
     private static final String DUNGEON_COMPLAINTS_KEY_PREFIX = "dungeon:complaints:";
+    private static final String GUILD_COMPLAINTS_KEY_PREFIX = "guild:complaints:";
 
     public Complaint getComplaintById(Long id) {
         // 先从 Redis 缓存中获取
@@ -81,6 +82,30 @@ public class ComplaintService {
         }
 
         return complaints;
+    }
+    
+    public List<Complaint> getComplaintsByTargetGuild(String targetGuild) {
+        String key = GUILD_COMPLAINTS_KEY_PREFIX + targetGuild;
+        List<Complaint> complaints = redisUtil.getList(key, Complaint.class);
+
+        if (complaints == null) {
+            complaints = complaintMapper.findByTargetGuild(targetGuild);
+            redisUtil.set(key, complaints, 30, TimeUnit.MINUTES);
+        }
+
+        return complaints;
+    }
+    
+    public List<String> getAllGuilds() {
+        String key = "all:guilds";
+        List<String> guilds = redisUtil.getList(key, String.class);
+
+        if (guilds == null) {
+            guilds = complaintMapper.findAllGuilds();
+            redisUtil.set(key, guilds, 1, TimeUnit.HOURS);
+        }
+
+        return guilds;
     }
 
     public Complaint createComplaint(Complaint complaint) {
@@ -144,6 +169,18 @@ public class ComplaintService {
 
         if (result == null) {
             result = complaintMapper.findMostComplainedDungeons();
+            redisUtil.set(key, result, 1, TimeUnit.HOURS);
+        }
+
+        return result;
+    }
+
+    public List<ComplaintCountDTO> getMostComplainedGuilds() {
+        String key = "stats:most_complained_guilds";
+        List<ComplaintCountDTO> result = redisUtil.getList(key, ComplaintCountDTO.class);
+
+        if (result == null) {
+            result = complaintMapper.findMostComplainedGuilds();
             redisUtil.set(key, result, 1, TimeUnit.HOURS);
         }
 

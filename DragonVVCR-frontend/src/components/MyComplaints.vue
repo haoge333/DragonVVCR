@@ -17,6 +17,7 @@
             <div class="d-flex justify-content-between align-items-center mb-1">
               <div class="d-flex flex-wrap align-items-center">
                 <span class="me-3"><strong>菜鸡ID:</strong> {{ complaint.targetPlayerId }}</span>
+                <span class="me-3" v-if="complaint.targetGuild"><strong>工会:</strong> {{ complaint.targetGuild }}</span>
                 <span><strong>副本:</strong> {{ complaint.dungeonName }}</span>
               </div>
               <small class="text-muted ms-3">{{ formatDate(complaint.createdTime) }}</small>

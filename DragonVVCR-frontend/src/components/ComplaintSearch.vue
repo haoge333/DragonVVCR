@@ -5,14 +5,38 @@
         <label for="searchType" class="form-label">搜索类型</label>
         <select class="form-select" id="searchType" v-model="searchType">
           <option value="player">菜鸡ID</option>
+          <option value="guild">菜鸡工会</option>
           <option value="dungeon">副本类型</option>
         </select>
       </div>
       <div class="mb-3">
-        <label :for="searchType === 'player' ? 'playerName' : 'dungeonType'" class="form-label">
-          {{ searchType === 'player' ? '菜鸡名称' : '副本类型' }}
+        <label :for="searchType === 'player' ? 'playerName' : (searchType === 'guild' ? 'guildName' : 'dungeonType')" class="form-label">
+          {{ searchType === 'player' ? '菜鸡名称' : (searchType === 'guild' ? '工会名称' : '副本类型') }}
         </label>
-        <input v-if="searchType === 'player'" type="text" class="form-control" id="playerName" v-model="keyword">
+        <div v-if="searchType === 'player'" class="input-wrapper">
+          <input type="text" class="form-control" id="playerName" v-model="keyword">
+        </div>
+        <div v-else-if="searchType === 'guild'" class="dropdown-wrapper">
+          <input 
+            type="text" 
+            class="form-control" 
+            id="guildName" 
+            v-model="keyword" 
+            @focus="showGuildDropdown = true" 
+            @input="filterGuilds" 
+            placeholder="请选择或输入工会名称"
+          >
+          <div class="dropdown-menu" v-if="showGuildDropdown && filteredGuilds.length > 0">
+            <div 
+              v-for="guild in filteredGuilds" 
+              :key="guild" 
+              class="dropdown-item" 
+              @click="selectGuild(guild)"
+            >
+              {{ guild }}
+            </div>
+          </div>
+        </div>
         <select v-else class="form-select" id="dungeonType" v-model="keyword">
           <option v-for="item in dungeonTypes" :key="item.dictCode" :value="item.dictCode">
             {{ item.dictName }}
@@ -313,7 +337,7 @@
 </style>
 
 <script>
-import { ref, onMounted, watch } from 'vue';
+import { ref, onMounted, onUnmounted, watch } from 'vue';
 import complaintService from '../services/complaintService';
 import dictionaryService from '../services/dictionaryService';
 
@@ -327,6 +351,9 @@ export default {
     const hasSearched = ref(false);
     const dungeonTypes = ref([]);
     const isExpanded = ref({});
+    const guilds = ref([]);
+    const filteredGuilds = ref([]);
+    const showGuildDropdown = ref(false);
 
     // 获取副本类型字典
     const getDungeonTypes = async () => {
@@ -343,7 +370,7 @@ export default {
 
     const handleSearch = async () => {
       if (!keyword.value.trim()) {
-        alert(searchType.value === 'player' ? '请输入菜鸡名称' : '请选择副本类型');
+        alert(searchType.value === 'player' ? '请输入菜鸡名称' : (searchType.value === 'guild' ? '请输入工会名称' : '请选择副本类型'));
         return;
       }
 
@@ -354,6 +381,8 @@ export default {
         let response;
         if (searchType.value === 'player') {
           response = await complaintService.getComplaintsByPlayer(keyword.value);
+        } else if (searchType.value === 'guild') {
+          response = await complaintService.getComplaintsByGuild(keyword.value);
         } else {
           // 确保提交的是 dictCode 而不是 dictName
           console.log('搜索副本类型(dictCode):', keyword.value);
@@ -384,6 +413,42 @@ export default {
       isExpanded.value[id] = !isExpanded.value[id];
     };
 
+    // 获取所有工会
+    const getAllGuilds = async () => {
+      try {
+        const response = await complaintService.getAllGuilds();
+        guilds.value = response.data || [];
+        filteredGuilds.value = guilds.value;
+      } catch (error) {
+        console.error('获取工会列表失败:', error);
+      }
+    };
+    
+    // 过滤工会列表
+    const filterGuilds = () => {
+      if (!keyword.value) {
+        filteredGuilds.value = guilds.value;
+      } else {
+        filteredGuilds.value = guilds.value.filter(guild => 
+          guild.toLowerCase().includes(keyword.value.toLowerCase())
+        );
+      }
+    };
+    
+    // 选择工会
+    const selectGuild = (guild) => {
+      keyword.value = guild;
+      showGuildDropdown.value = false;
+    };
+    
+    // 点击外部关闭下拉框
+    const handleClickOutside = (event) => {
+      const dropdown = document.querySelector('.dropdown-wrapper');
+      if (dropdown && !dropdown.contains(event.target)) {
+        showGuildDropdown.value = false;
+      }
+    };
+    
     // 监听搜索类型变化
     watch(searchType, (newType, oldType) => {
       if (newType === 'dungeon' && oldType === 'player' && dungeonTypes.value.length > 0) {
@@ -392,12 +457,22 @@ export default {
       } else if (newType === 'player') {
         // 切换到玩家ID时，清空关键字
         keyword.value = '';
+      } else if (newType === 'guild') {
+        // 切换到工会时，清空关键字
+        keyword.value = '';
       }
     });
 
     // 组件挂载时获取字典数据
     onMounted(() => {
       getDungeonTypes();
+      getAllGuilds();
+      document.addEventListener('click', handleClickOutside);
+    });
+    
+    // 组件卸载时移除事件监听
+    onUnmounted(() => {
+      document.removeEventListener('click', handleClickOutside);
     });
 
     return {
@@ -408,6 +483,11 @@ export default {
       hasSearched,
       dungeonTypes,
       isExpanded,
+      guilds,
+      filteredGuilds,
+      showGuildDropdown,
+      filterGuilds,
+      selectGuild,
       handleSearch,
       formatDate,
       shouldShowExpandButton,

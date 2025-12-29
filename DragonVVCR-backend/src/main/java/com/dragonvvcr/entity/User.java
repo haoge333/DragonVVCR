@@ -28,6 +28,9 @@ public class User implements Serializable {
     @TableField("game_id")
     private String gameId;
 
+    @TableField("guild")
+    private String guild;
+
     @TableField(value = "created_time", fill = FieldFill.INSERT)
     private LocalDateTime createdTime;
 }

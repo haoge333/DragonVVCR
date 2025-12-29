@@ -42,6 +42,27 @@
           </div>
         </div>
       </div>
+      
+      <div class="stats-card">
+        <h5 class="card-title">菜鸡工会排行榜</h5>
+        <div v-if="guildsLoading" class="text-center py-3">
+          <div class="spinner-border spinner-border-sm" role="status">
+            <span class="visually-hidden">加载中...</span>
+          </div>
+        </div>
+        <div v-else>
+          <div v-if="mostComplainedGuilds.length === 0" class="text-center py-3">
+            <p class="empty-message">暂无数据</p>
+          </div>
+          <div v-else class="stats-list">
+            <div v-for="(guild, index) in mostComplainedGuilds" :key="index" class="stats-item">
+              <span class="rank">{{ index + 1 }}</span>
+              <span class="name">{{ guild.name }}</span>
+              <span class="count">{{ guild.count }} 次吐槽</span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -278,8 +299,10 @@ export default {
   setup() {
     const mostComplainedPlayers = ref([]);
     const mostComplainedDungeons = ref([]);
+    const mostComplainedGuilds = ref([]);
     const playersLoading = ref(false);
     const dungeonsLoading = ref(false);
+    const guildsLoading = ref(false);
 
     const loadMostComplainedPlayers = async () => {
       playersLoading.value = true;
@@ -306,10 +329,24 @@ export default {
         dungeonsLoading.value = false;
       }
     };
+    
+    const loadMostComplainedGuilds = async () => {
+      guildsLoading.value = true;
+      try {
+        const response = await complaintService.getMostComplainedGuilds();
+        mostComplainedGuilds.value = response.data;
+      } catch (error) {
+        console.error('加载工会统计错误:', error);
+        alert('加载统计数据失败，请检查网络连接');
+      } finally {
+        guildsLoading.value = false;
+      }
+    };
 
     const loadStats = () => {
       loadMostComplainedPlayers();
       loadMostComplainedDungeons();
+      loadMostComplainedGuilds();
     };
 
     // 监听标签页显示事件，加载数据
@@ -323,8 +360,10 @@ export default {
     return {
       mostComplainedPlayers,
       mostComplainedDungeons,
+      mostComplainedGuilds,
       playersLoading,
-      dungeonsLoading
+      dungeonsLoading,
+      guildsLoading
     };
   }
 };

@@ -23,6 +23,9 @@ public class Complaint implements Serializable {
     @TableField("target_player_id")
     private String targetPlayerId;
 
+    @TableField("target_guild")
+    private String targetGuild;
+
     @TableField("dungeon_type")
     private String dungeonType;
 

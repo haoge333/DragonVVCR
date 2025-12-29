@@ -109,6 +109,12 @@ public class ComplaintController {
         return ResponseEntity.ok(complaints);
     }
 
+    @GetMapping("/guild/{targetGuild}")
+    public ResponseEntity<List<Complaint>> getComplaintsByGuild(@PathVariable String targetGuild) {
+        List<Complaint> complaints = complaintService.getComplaintsByTargetGuild(targetGuild);
+        return ResponseEntity.ok(complaints);
+    }
+
     @GetMapping("/stats/most-complained-players")
     public ResponseEntity<List<ComplaintCountDTO>> getMostComplainedPlayers() {
         List<ComplaintCountDTO> stats = complaintService.getMostComplainedPlayers();
@@ -119,6 +125,18 @@ public class ComplaintController {
     public ResponseEntity<List<ComplaintCountDTO>> getMostComplainedDungeons() {
         List<ComplaintCountDTO> stats = complaintService.getMostComplainedDungeons();
         return ResponseEntity.ok(stats);
+    }
+
+    @GetMapping("/stats/most-complained-guilds")
+    public ResponseEntity<List<ComplaintCountDTO>> getMostComplainedGuilds() {
+        List<ComplaintCountDTO> stats = complaintService.getMostComplainedGuilds();
+        return ResponseEntity.ok(stats);
+    }
+    
+    @GetMapping("/guilds")
+    public ResponseEntity<List<String>> getAllGuilds() {
+        List<String> guilds = complaintService.getAllGuilds();
+        return ResponseEntity.ok(guilds);
     }
 
     @GetMapping("/list")

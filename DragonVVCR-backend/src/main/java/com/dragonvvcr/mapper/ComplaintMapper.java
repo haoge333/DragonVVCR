@@ -19,6 +19,8 @@ public interface ComplaintMapper extends BaseMapper<Complaint> {
     List<Complaint> findByTargetPlayerId(String targetPlayerId);
 
     List<Complaint> findByDungeonType(String dungeonType);
+    
+    List<Complaint> findByTargetGuild(String targetGuild);
 
     List<Complaint> findByUserIdAndTargetPlayerId(@Param("userId") Long userId, @Param("targetPlayerId") String targetPlayerId);
 
@@ -29,6 +31,13 @@ public interface ComplaintMapper extends BaseMapper<Complaint> {
             "LEFT JOIN dictionary d ON c.dungeon_type = d.dict_code AND d.dict_type = 'sys_nest_type' " +
             "GROUP BY c.dungeon_type ORDER BY count DESC")
     List<ComplaintCountDTO> findMostComplainedDungeons();
+    
+    @Select("SELECT COALESCE(target_guild, '未知工会') as name, COUNT(*) as count FROM complaints " +
+            "WHERE target_guild != '' GROUP BY target_guild ORDER BY count DESC")
+    List<ComplaintCountDTO> findMostComplainedGuilds();
+    
+    @Select("SELECT DISTINCT target_guild FROM complaints WHERE target_guild != '' ORDER BY target_guild")
+    List<String> findAllGuilds();
 
     /**
      * 分页查询所有吐槽，按创建时间降序排列

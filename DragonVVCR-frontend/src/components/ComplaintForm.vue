@@ -5,6 +5,30 @@
       <input type="text" class="form-control" id="targetPlayerId" v-model="targetPlayerId" required>
     </div>
     <div class="mb-3">
+      <label for="targetGuild" class="form-label">菜鸡工会</label>
+      <div class="dropdown-wrapper">
+        <input 
+          type="text" 
+          class="form-control" 
+          id="targetGuild" 
+          v-model="targetGuild" 
+          @focus="showGuildDropdown = true" 
+          @input="filterGuilds" 
+          placeholder="请选择或输入被吐槽玩家的工会名称（可选）"
+        >
+        <div class="dropdown-menu" v-if="showGuildDropdown && filteredGuilds.length > 0">
+          <div 
+            v-for="guild in filteredGuilds" 
+            :key="guild" 
+            class="dropdown-item" 
+            @click="selectGuild(guild)"
+          >
+            {{ guild }}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="mb-3">
       <label for="dungeonType" class="form-label">副本类型</label>
       <select class="form-select" id="dungeonType" v-model="dungeonType" required>
         <option v-for="item in dungeonTypes" :key="item.dictCode" :value="item.dictCode">
@@ -62,6 +86,34 @@
   border-color: #0062cc;
 }
 
+.dropdown-wrapper {
+  position: relative;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background-color: white;
+  border: 1px solid #ced4da;
+  border-radius: 0 0 6px 6px;
+  max-height: 200px;
+  overflow-y: auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.dropdown-item {
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.dropdown-item:hover {
+  background-color: #f8f9fa;
+}
+
 /* 移动设备优化 */
 @media (max-width: 576px) {
   .complaint-form {
@@ -110,7 +162,7 @@
 </style>
 
 <script>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
 import complaintService from '../services/complaintService';
 import dictionaryService from '../services/dictionaryService';
 
@@ -125,9 +177,13 @@ export default {
   emits: ['submit-success'],
   setup(props, { emit }) {
     const targetPlayerId = ref('');
+    const targetGuild = ref('');
     const dungeonType = ref('');
     const description = ref('');
     const dungeonTypes = ref([]);
+    const guilds = ref([]);
+    const filteredGuilds = ref([]);
+    const showGuildDropdown = ref(false);
 
     // 获取副本类型字典
     const getDungeonTypes = async () => {
@@ -154,6 +210,7 @@ export default {
             id: props.userId
           },
           targetPlayerId: targetPlayerId.value,
+          targetGuild: targetGuild.value,
           dungeonType: dungeonType.value,
           description: description.value
         });
@@ -161,6 +218,7 @@ export default {
         if (response.data.id) {
           // 清空表单
           targetPlayerId.value = '';
+          targetGuild.value = '';
           dungeonType.value = '';
           description.value = '';
 
@@ -174,17 +232,65 @@ export default {
       }
     };
 
+    // 获取所有工会
+    const getAllGuilds = async () => {
+      try {
+        const response = await complaintService.getAllGuilds();
+        guilds.value = response.data || [];
+        filteredGuilds.value = guilds.value;
+      } catch (error) {
+        console.error('获取工会列表失败:', error);
+      }
+    };
+    
+    // 过滤工会列表
+    const filterGuilds = () => {
+      if (!targetGuild.value) {
+        filteredGuilds.value = guilds.value;
+      } else {
+        filteredGuilds.value = guilds.value.filter(guild => 
+          guild.toLowerCase().includes(targetGuild.value.toLowerCase())
+        );
+      }
+    };
+    
+    // 选择工会
+    const selectGuild = (guild) => {
+      targetGuild.value = guild;
+      showGuildDropdown.value = false;
+    };
+    
+    // 点击外部关闭下拉框
+    const handleClickOutside = (event) => {
+      const dropdown = document.querySelector('.dropdown-wrapper');
+      if (dropdown && !dropdown.contains(event.target)) {
+        showGuildDropdown.value = false;
+      }
+    };
+    
     // 组件挂载时获取字典数据
     onMounted(() => {
       getDungeonTypes();
+      getAllGuilds();
+      document.addEventListener('click', handleClickOutside);
+    });
+    
+    // 组件卸载时移除事件监听
+    onUnmounted(() => {
+      document.removeEventListener('click', handleClickOutside);
     });
 
     return {
       targetPlayerId,
+      targetGuild,
       dungeonType,
       description,
       dungeonTypes,
-      handleSubmit
+      guilds,
+      filteredGuilds,
+      showGuildDropdown,
+      filterGuilds,
+      selectGuild
     };
   }
 };

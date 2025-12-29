@@ -34,11 +34,18 @@
         </select>
       </div>
     </div>
-    <div class="mb-4">
+    <div class="mb-3">
       <label for="registerGameId" class="form-label">游戏ID</label>
       <div class="input-group">
         <span class="input-group-text"><i class="bi bi-controller"></i></span>
         <input type="text" class="form-control" id="registerGameId" v-model="gameId" placeholder="请输入游戏ID" required>
+      </div>
+    </div>
+    <div class="mb-4">
+      <label for="registerGuild" class="form-label">工会</label>
+      <div class="input-group">
+        <span class="input-group-text"><i class="bi bi-people-fill"></i></span>
+        <input type="text" class="form-control" id="registerGuild" v-model="guild" placeholder="请输入工会名称（可选）">
       </div>
     </div>
     <div class="d-grid gap-2">
@@ -165,6 +172,7 @@ export default {
     const region = ref('');
     const server = ref('');
     const gameId = ref('');
+    const guild = ref('');
     const regionOptions = ref([]);
     const serverOptions = ref([]);
 
@@ -215,7 +223,8 @@ export default {
           password: password.value,
           region: region.value,
           server: server.value,
-          gameId: gameId.value
+          gameId: gameId.value,
+          guild: guild.value
         });
 
         if (response.data.success) {
@@ -235,6 +244,7 @@ export default {
       region,
       server,
       gameId,
+      guild,
       regionOptions,
       serverOptions,
       handleSubmit

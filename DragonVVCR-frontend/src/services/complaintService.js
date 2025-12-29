@@ -29,6 +29,11 @@ export default {
   getComplaintsByDungeon(dungeonName) {
     return api.get(`/complaints/dungeon/${dungeonName}`);
   },
+  
+  // 根据工会名称搜索投诉
+  getComplaintsByGuild(guildName) {
+    return api.get(`/complaints/guild/${guildName}`);
+  },
 
   // 获取最常被投诉的玩家
   getMostComplainedPlayers() {
@@ -38,5 +43,15 @@ export default {
   // 获取最常被投诉的副本
   getMostComplainedDungeons() {
     return api.get('/complaints/stats/most-complained-dungeons');
+  },
+  
+  // 获取最常被投诉的工会
+  getMostComplainedGuilds() {
+    return api.get('/complaints/stats/most-complained-guilds');
+  },
+  
+  // 获取所有工会列表
+  getAllGuilds() {
+    return api.get('/complaints/guilds');
   }
 };

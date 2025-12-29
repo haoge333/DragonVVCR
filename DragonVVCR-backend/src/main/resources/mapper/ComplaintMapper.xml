@@ -6,6 +6,7 @@
         <id column="id" property="id"/>
         <result column="user_id" property="userId"/>
         <result column="target_player_id" property="targetPlayerId"/>
+        <result column="target_guild" property="targetGuild"/>
         <result column="dungeon_type" property="dungeonType"/>
         <result column="dungeonName" property="dungeonName"/>
         <result column="description" property="description"/>
@@ -34,6 +35,12 @@
         SELECT c.*, d.dict_name AS dungeonName FROM complaints c
         LEFT JOIN dictionary d ON c.dungeon_type = d.dict_code AND d.dict_type = 'sys_nest_type'
         WHERE c.dungeon_type = #{dungeonType}
+    </select>
+    
+    <select id="findByTargetGuild" resultMap="ComplaintResultMap">
+        SELECT c.*, d.dict_name AS dungeonName FROM complaints c
+        LEFT JOIN dictionary d ON c.dungeon_type = d.dict_code AND d.dict_type = 'sys_nest_type'
+        WHERE c.target_guild = #{targetGuild}
     </select>
 
     <select id="findByUserIdAndTargetPlayerId" resultMap="ComplaintResultMap">
