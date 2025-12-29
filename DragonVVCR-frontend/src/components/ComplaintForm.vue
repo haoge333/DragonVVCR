@@ -289,6 +289,7 @@ export default {
       guilds,
       filteredGuilds,
       showGuildDropdown,
+      handleSubmit,
       filterGuilds,
       selectGuild
     };

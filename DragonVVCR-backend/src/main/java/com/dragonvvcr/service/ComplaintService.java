@@ -85,14 +85,8 @@ public class ComplaintService {
     }
     
     public List<Complaint> getComplaintsByTargetGuild(String targetGuild) {
-        String key = GUILD_COMPLAINTS_KEY_PREFIX + targetGuild;
-        List<Complaint> complaints = redisUtil.getList(key, Complaint.class);
-
-        if (complaints == null) {
-            complaints = complaintMapper.findByTargetGuild(targetGuild);
-            redisUtil.set(key, complaints, 30, TimeUnit.MINUTES);
-        }
-
+        // 由于是模糊查询，不使用缓存，直接查询数据库
+        List<Complaint> complaints = complaintMapper.findByTargetGuild(targetGuild);
         return complaints;
     }
     

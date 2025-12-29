@@ -24,7 +24,7 @@
             v-model="keyword" 
             @focus="showGuildDropdown = true" 
             @input="filterGuilds" 
-            placeholder="请选择或输入工会名称"
+            placeholder="请选择或输入工会名称（支持模糊查询）"
           >
           <div class="dropdown-menu" v-if="showGuildDropdown && filteredGuilds.length > 0">
             <div 
@@ -61,12 +61,17 @@
 
       <div v-else-if="searchResults.length > 0" class="search-results">
         <div v-for="complaint in searchResults" :key="complaint.id" class="complaint-card">
-          <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">菜鸡ID: {{ complaint.targetPlayerId }}</h5>
-            <small class="text-muted">{{ formatDate(complaint.createdTime) }}</small>
+          <div class="card-header">
+            <div class="d-flex justify-content-between align-items-center mb-1">
+              <div class="d-flex flex-wrap align-items-center">
+                <span class="me-3"><strong>菜鸡ID:</strong> {{ complaint.targetPlayerId }}</span>
+                <span class="me-3"><strong>工会:</strong> {{ complaint.targetGuild || '未知' }}</span>
+                <span><strong>副本:</strong> {{ complaint.dungeonName }}</span>
+              </div>
+              <small class="text-muted ms-3">{{ formatDate(complaint.createdTime) }}</small>
+            </div>
           </div>
           <div class="card-body">
-            <p class="mb-2"><strong>副本名称:</strong> {{ complaint.dungeonName }}</p>
             <div class="behavior-section">
               <h6 class="behavior-title">菜鸡行为:</h6>
               <div class="behavior-content" :class="{ 'expanded': isExpanded[complaint.id] }">
