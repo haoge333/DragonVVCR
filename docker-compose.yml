@@ -9,16 +9,25 @@ services:
       MYSQL_DATABASE: dragonvvcr
       TZ: Asia/Shanghai
       MYSQL_ROOT_HOST: '%'
+      # 确保数据持久化
+      MYSQL_ALLOW_EMPTY_PASSWORD: "no"
     ports:
       - "3306:3306"
     volumes:
+      # 使用命名卷持久化数据
       - mysql_data:/var/lib/mysql
-      - ./DragonVVCR-backend/src/main/resources/sql/mysql_init.sql:/docker-entrypoint-initdb.d/mysql_init.sql
-    command: --default-authentication-plugin=mysql_native_password --default-time-zone='+08:00'
+      # 只在数据目录为空时执行初始化脚本
+      - ./DragonVVCR-backend/src/main/resources/sql/mysql_init.sql:/docker-entrypoint-initdb.d/mysql_init.sql:ro
+    # 优化MySQL配置以确保数据持久化
+    command: >
+      --default-authentication-plugin=mysql_native_password
+      --default-time-zone='+08:00'
+      --innodb-flush-log-at-trx-commit=1
+      --sync-binlog=1
     networks:
       - dragonvvcr-network
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p", "root"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -95,8 +104,11 @@ services:
       - dragonvvcr-network
 
 volumes:
+  # 明确指定MySQL数据卷配置
   mysql_data:
+    driver: local
   redis_data:
+    driver: local
 
 networks:
   dragonvvcr-network:
