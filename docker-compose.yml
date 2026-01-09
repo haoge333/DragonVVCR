@@ -6,7 +6,6 @@ services:
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: dragonvvcr
       TZ: Asia/Shanghai
       MYSQL_ROOT_HOST: '%'
       # 确保数据持久化
