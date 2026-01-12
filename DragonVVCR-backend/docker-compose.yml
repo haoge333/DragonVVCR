@@ -4,7 +4,7 @@ services:
     container_name: dragonvvcr-mysql
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: DragonVVCR@Secure#2023!Root
       MYSQL_DATABASE: dragonvvcr
     ports:
       - "3306:3306"
@@ -15,7 +15,7 @@ services:
     networks:
       - dragonvvcr-network
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-pDragonVVCR@Secure#2023!Root"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -61,7 +61,7 @@ services:
       # 数据库连接配置
       - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/dragonvvcr?useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
       - SPRING_DATASOURCE_USERNAME=root
-      - SPRING_DATASOURCE_PASSWORD=root
+      - SPRING_DATASOURCE_PASSWORD=DragonVVCR@Secure#2023!Root
       - SPRING_DATASOURCE_DRIVER_CLASS_NAME=com.mysql.cj.jdbc.Driver
       # Redis连接配置
       - SPRING_REDIS_HOST=redis
